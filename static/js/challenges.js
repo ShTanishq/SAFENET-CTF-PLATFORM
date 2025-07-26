@@ -14,9 +14,6 @@ function initializeChallenge(challengeData) {
     // Setup flag submission
     setupFlagSubmission();
     
-    // Setup challenge interactions
-    setupChallengeInteractions();
-    
     // Load attempt count
     loadAttemptCount();
 }

@@ -79,13 +79,12 @@ def submit_flag():
     is_correct = submitted_flag == challenge_data['flag']
     
     # Record attempt
-    attempt = ChallengeAttempt(
-        user_id=session.get('user_id'),
-        challenge_id=challenge_id,
-        submitted_flag=submitted_flag,
-        is_correct=is_correct,
-        ip_address=request.remote_addr
-    )
+    attempt = ChallengeAttempt()
+    attempt.user_id = session.get('user_id')
+    attempt.challenge_id = challenge_id
+    attempt.submitted_flag = submitted_flag
+    attempt.is_correct = is_correct
+    attempt.ip_address = request.remote_addr
     db.session.add(attempt)
     
     if is_correct:
@@ -97,11 +96,10 @@ def submit_flag():
             ).first()
             
             if not existing_completion:
-                completion = CompletedChallenge(
-                    user_id=session['user_id'],
-                    challenge_id=challenge_id,
-                    points_earned=challenge_data['points']
-                )
+                completion = CompletedChallenge()
+                completion.user_id = session['user_id']
+                completion.challenge_id = challenge_id
+                completion.points_earned = challenge_data['points']
                 db.session.add(completion)
         
         db.session.commit()
@@ -121,6 +119,11 @@ def submit_flag():
 def vulnerable_endpoint(owasp_id):
     """Vulnerable endpoints for CTF challenges - each implements specific OWASP vulnerability"""
     return challenge_manager.handle_vulnerable_request(owasp_id, request)
+
+@app.route('/guide')
+def challenge_guide():
+    """Display comprehensive challenge solving guide"""
+    return render_template('challenge_guide.html')
 
 @app.route('/leaderboard')
 def leaderboard():
