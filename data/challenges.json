@@ -1,0 +1,152 @@
+{
+  "A01": {
+    "id": 1,
+    "owasp_category": "A01",
+    "category_name": "Broken Access Control",
+    "title": "Direct Object Reference Challenge",
+    "description": "<p>This challenge demonstrates a classic <strong>Broken Access Control</strong> vulnerability through Insecure Direct Object References (IDOR).</p><p><strong>Scenario:</strong> You are testing a user profile system that allows users to view their account information by providing a user ID parameter. The application fails to properly verify that the user requesting the information is authorized to access it.</p><p><strong>Your Mission:</strong> Exploit the broken access control to access another user's profile information and find the hidden flag.</p><p><strong>Learning Objectives:</strong></p><ul><li>Understand how direct object reference vulnerabilities work</li><li>Learn to identify and exploit authorization bypass flaws</li><li>Practice parameter manipulation techniques</li></ul>",
+    "difficulty": "Easy",
+    "points": 100,
+    "flag": "FLAG{br0k3n_4cc3ss_c0ntr0l_2021}",
+    "hints": [
+      "Try changing the user_id parameter to access other users' data",
+      "Administrative users might have higher user ID numbers",
+      "Look for sensitive information in the API response"
+    ]
+  },
+  "A02": {
+    "id": 2,
+    "owasp_category": "A02",
+    "category_name": "Cryptographic Failures",
+    "title": "Weak Encryption Analysis",
+    "description": "<p>This challenge demonstrates <strong>Cryptographic Failures</strong> through the use of weak encryption algorithms.</p><p><strong>Scenario:</strong> The application uses a custom encryption service to protect sensitive data. However, the encryption algorithm implemented is fundamentally flawed and easily reversible.</p><p><strong>Your Mission:</strong> Analyze the encryption algorithm, identify its weakness, and decrypt the protected data to reveal the flag.</p><p><strong>Learning Objectives:</strong></p><ul><li>Recognize weak encryption algorithms and their patterns</li><li>Understand the importance of using strong, proven cryptographic methods</li><li>Practice cryptanalysis techniques on vulnerable implementations</li></ul>",
+    "difficulty": "Medium",
+    "points": 150,
+    "flag": "FLAG{crypto_failure_weak_encryption}",
+    "hints": [
+      "The encryption algorithm used is ROT13 - a simple letter substitution cipher",
+      "ROT13 can be easily reversed by applying it again to the encrypted text",
+      "Try encrypting the word 'secret' to see if it reveals anything interesting"
+    ]
+  },
+  "A03": {
+    "id": 3,
+    "owasp_category": "A03",
+    "category_name": "Injection",
+    "title": "SQL Injection Exploitation",
+    "description": "<p>This challenge demonstrates classic <strong>SQL Injection</strong> vulnerabilities in user input processing.</p><p><strong>Scenario:</strong> The application has a user search feature that constructs SQL queries using unsanitized user input. The lack of proper input validation and parameterized queries creates an opportunity for SQL injection attacks.</p><p><strong>Your Mission:</strong> Exploit the SQL injection vulnerability to extract sensitive information from the database, including hidden user records containing the flag.</p><p><strong>Learning Objectives:</strong></p><ul><li>Understand how SQL injection vulnerabilities occur</li><li>Practice constructing SQL injection payloads</li><li>Learn about UNION-based SQL injection techniques</li></ul>",
+    "difficulty": "Medium",
+    "points": 200,
+    "flag": "FLAG{sql_1nj3ct10n_pwn3d}",
+    "hints": [
+      "Try using single quotes to break out of the SQL query",
+      "Use UNION SELECT to combine results from multiple queries",
+      "The payload ' OR '1'='1' UNION SELECT * FROM users-- might be helpful"
+    ]
+  },
+  "A04": {
+    "id": 4,
+    "owasp_category": "A04",
+    "category_name": "Insecure Design",
+    "title": "Password Reset Design Flaw",
+    "description": "<p>This challenge demonstrates <strong>Insecure Design</strong> through a fundamentally flawed password reset mechanism.</p><p><strong>Scenario:</strong> The application implements a password reset feature that lacks proper security controls. The design fails to implement verification mechanisms that should prevent unauthorized password changes.</p><p><strong>Your Mission:</strong> Exploit the design flaw to reset an administrator's password without proper authorization and retrieve the flag.</p><p><strong>Learning Objectives:</strong></p><ul><li>Identify design-level security flaws vs implementation bugs</li><li>Understand the importance of threat modeling in secure design</li><li>Recognize missing security controls in application workflows</li></ul>",
+    "difficulty": "Easy",
+    "points": 100,
+    "flag": "FLAG{1ns3cur3_d3s1gn_n0_v3r1f1c4t10n}",
+    "hints": [
+      "The password reset doesn't require email verification or existing password",
+      "Try resetting the password for admin@company.com",
+      "No additional authentication is required to change someone else's password"
+    ]
+  },
+  "A05": {
+    "id": 5,
+    "owasp_category": "A05",
+    "category_name": "Security Misconfiguration",
+    "title": "Debug Mode Information Disclosure",
+    "description": "<p>This challenge demonstrates <strong>Security Misconfiguration</strong> through exposed debug information.</p><p><strong>Scenario:</strong> The application has debug mode functionality that was accidentally left enabled in production. When activated, this debug mode exposes sensitive configuration information that should never be visible to users.</p><p><strong>Your Mission:</strong> Enable debug mode to access sensitive system information and locate the hidden flag in the exposed configuration data.</p><p><strong>Learning Objectives:</strong></p><ul><li>Understand the risks of leaving debug features enabled in production</li><li>Learn how misconfigurations can lead to information disclosure</li><li>Practice identifying and exploiting configuration vulnerabilities</li></ul>",
+    "difficulty": "Easy",
+    "points": 75,
+    "flag": "FLAG{s3cur1ty_m1sc0nf1g_d3bug_3xp0s3d}",
+    "hints": [
+      "Look for ways to enable debug mode in the application",
+      "Debug information often contains sensitive configuration details",
+      "Try using the debug=true parameter"
+    ]
+  },
+  "A06": {
+    "id": 6,
+    "owasp_category": "A06",
+    "category_name": "Vulnerable and Outdated Components",
+    "title": "Outdated Library Vulnerability",
+    "description": "<p>This challenge demonstrates <strong>Vulnerable and Outdated Components</strong> through the use of libraries with known security issues.</p><p><strong>Scenario:</strong> The application uses outdated JavaScript libraries with known security vulnerabilities. A component version checker reveals information about the vulnerable versions in use.</p><p><strong>Your Mission:</strong> Identify the outdated components and their associated vulnerabilities to locate the flag.</p><p><strong>Learning Objectives:</strong></p><ul><li>Understand the risks of using outdated software components</li><li>Learn to identify vulnerable library versions</li><li>Practice vulnerability research and CVE analysis</li></ul>",
+    "difficulty": "Easy",
+    "points": 75,
+    "flag": "FLAG{vuln3r4bl3_c0mp0n3nts_0utd4t3d}",
+    "hints": [
+      "Check the version information for popular JavaScript libraries",
+      "jQuery has had several known vulnerabilities in older versions",
+      "Use the component version checker to scan for outdated libraries"
+    ]
+  },
+  "A07": {
+    "id": 7,
+    "owasp_category": "A07",
+    "category_name": "Identification and Authentication Failures",
+    "title": "Weak Password Brute Force",
+    "description": "<p>This challenge demonstrates <strong>Authentication Failures</strong> through weak password policies and inadequate brute force protection.</p><p><strong>Scenario:</strong> The application implements a login system with weak password requirements and no brute force protection. Administrative accounts may be using commonly used weak passwords.</p><p><strong>Your Mission:</strong> Exploit the weak authentication mechanism to gain access to an administrative account and retrieve the flag.</p><p><strong>Learning Objectives:</strong></p><ul><li>Understand the importance of strong password policies</li><li>Learn about common weak passwords and attack patterns</li><li>Practice credential-based attacks on weak authentication systems</li></ul>",
+    "difficulty": "Easy",
+    "points": 100,
+    "flag": "FLAG{4uth3nt1c4t10n_f41lur3_w34k_p4ss}",
+    "hints": [
+      "Try common weak passwords like '123456', 'password', 'admin'",
+      "The admin account might be using a predictable password",
+      "No account lockout protection is implemented"
+    ]
+  },
+  "A08": {
+    "id": 8,
+    "owasp_category": "A08",
+    "category_name": "Software and Data Integrity Failures",
+    "title": "Insecure Data Processing",
+    "description": "<p>This challenge demonstrates <strong>Software and Data Integrity Failures</strong> through unsafe data processing mechanisms.</p><p><strong>Scenario:</strong> The application processes user-supplied data without proper integrity verification. This creates opportunities for attackers to manipulate the data processing workflow and potentially execute unauthorized operations.</p><p><strong>Your Mission:</strong> Manipulate the data processing system to trigger the integrity failure and extract the hidden flag.</p><p><strong>Learning Objectives:</strong></p><ul><li>Understand data integrity verification requirements</li><li>Learn about unsafe deserialization vulnerabilities</li><li>Practice data manipulation techniques to exploit integrity failures</li></ul>",
+    "difficulty": "Medium",
+    "points": 125,
+    "flag": "FLAG{d4t4_1nt3gr1ty_f41lur3_d3s3r14l}",
+    "hints": [
+      "The data processing system might execute special operations based on data content",
+      "Try including keywords like 'payload' and 'flag' in your data",
+      "Look for patterns that might trigger unsafe deserialization"
+    ]
+  },
+  "A09": {
+    "id": 9,
+    "owasp_category": "A09",
+    "category_name": "Security Logging and Monitoring Failures",
+    "title": "Audit Trail Bypass",
+    "description": "<p>This challenge demonstrates <strong>Security Logging and Monitoring Failures</strong> through inadequate audit trail implementation.</p><p><strong>Scenario:</strong> The application performs various operations but fails to properly log security-sensitive actions. This lack of monitoring allows attackers to perform malicious activities without detection.</p><p><strong>Your Mission:</strong> Perform a sensitive operation that should be logged but isn't, demonstrating the logging failure and obtaining the flag.</p><p><strong>Learning Objectives:</strong></p><ul><li>Understand the importance of comprehensive security logging</li><li>Learn to identify gaps in audit trail coverage</li><li>Practice exploiting insufficient monitoring controls</li></ul>",
+    "difficulty": "Easy",
+    "points": 75,
+    "flag": "FLAG{l0gg1ng_f41lur3_n0_4ud1t_tr41l}",
+    "hints": [
+      "Look for operations that seem security-sensitive",
+      "Try performing actions that should normally be logged",
+      "Sensitive operations might not be properly audited"
+    ]
+  },
+  "A10": {
+    "id": 10,
+    "owasp_category": "A10",
+    "category_name": "Server-Side Request Forgery",
+    "title": "Internal Resource Access",
+    "description": "<p>This challenge demonstrates <strong>Server-Side Request Forgery (SSRF)</strong> through improper URL validation.</p><p><strong>Scenario:</strong> The application provides a URL fetching service that retrieves content from user-specified URLs. However, it fails to properly validate and restrict the URLs that can be accessed, allowing attackers to make requests to internal resources.</p><p><strong>Your Mission:</strong> Exploit the SSRF vulnerability to access internal services and retrieve sensitive information including the flag.</p><p><strong>Learning Objectives:</strong></p><ul><li>Understand how SSRF vulnerabilities work and their impact</li><li>Learn to identify and exploit URL validation bypasses</li><li>Practice accessing internal services through SSRF</li></ul>",
+    "difficulty": "Medium",
+    "points": 150,
+    "flag": "FLAG{ssrf_1nt3rn4l_4cc3ss_pwn3d}",
+    "hints": [
+      "Try accessing internal network addresses like localhost or 127.0.0.1",
+      "Internal services might expose sensitive information",
+      "The application doesn't properly validate the destination URLs"
+    ]
+  }
+}

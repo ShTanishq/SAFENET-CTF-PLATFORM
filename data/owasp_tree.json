@@ -1,0 +1,312 @@
+[
+  {
+    "id": "A01",
+    "text": "A01:2021 - Broken Access Control",
+    "type": "vulnerability",
+    "data": {
+      "owasp_id": "A01",
+      "description": "Moved from #5 to #1, 94% of applications tested had some form of broken access control",
+      "severity": "Critical",
+      "url": "/vulnerability/A01"
+    },
+    "children": [
+      {
+        "id": "A01_info",
+        "text": "Learn About Broken Access Control",
+        "type": "info",
+        "data": {
+          "action": "view_vulnerability",
+          "owasp_id": "A01"
+        }
+      },
+      {
+        "id": "A01_challenge",
+        "text": "CTF Challenge: Direct Object Reference",
+        "type": "challenge",
+        "data": {
+          "action": "start_challenge",
+          "owasp_id": "A01"
+        }
+      }
+    ]
+  },
+  {
+    "id": "A02",
+    "text": "A02:2021 - Cryptographic Failures",
+    "type": "vulnerability",
+    "data": {
+      "owasp_id": "A02",
+      "description": "Previously Sensitive Data Exposure, focuses on failures related to cryptography",
+      "severity": "High",
+      "url": "/vulnerability/A02"
+    },
+    "children": [
+      {
+        "id": "A02_info",
+        "text": "Learn About Cryptographic Failures",
+        "type": "info",
+        "data": {
+          "action": "view_vulnerability",
+          "owasp_id": "A02"
+        }
+      },
+      {
+        "id": "A02_challenge",
+        "text": "CTF Challenge: Weak Encryption",
+        "type": "challenge",
+        "data": {
+          "action": "start_challenge",
+          "owasp_id": "A02"
+        }
+      }
+    ]
+  },
+  {
+    "id": "A03",
+    "text": "A03:2021 - Injection",
+    "type": "vulnerability",
+    "data": {
+      "owasp_id": "A03",
+      "description": "Dropped from #1 to #3, now includes Cross-Site Scripting (XSS)",
+      "severity": "High",
+      "url": "/vulnerability/A03"
+    },
+    "children": [
+      {
+        "id": "A03_info",
+        "text": "Learn About Injection Attacks",
+        "type": "info",
+        "data": {
+          "action": "view_vulnerability",
+          "owasp_id": "A03"
+        }
+      },
+      {
+        "id": "A03_challenge",
+        "text": "CTF Challenge: SQL Injection",
+        "type": "challenge",
+        "data": {
+          "action": "start_challenge",
+          "owasp_id": "A03"
+        }
+      }
+    ]
+  },
+  {
+    "id": "A04",
+    "text": "A04:2021 - Insecure Design",
+    "type": "vulnerability",
+    "data": {
+      "owasp_id": "A04",
+      "description": "New category focusing on design flaws and missing security controls",
+      "severity": "High",
+      "url": "/vulnerability/A04"
+    },
+    "children": [
+      {
+        "id": "A04_info",
+        "text": "Learn About Insecure Design",
+        "type": "info",
+        "data": {
+          "action": "view_vulnerability",
+          "owasp_id": "A04"
+        }
+      },
+      {
+        "id": "A04_challenge",
+        "text": "CTF Challenge: Design Flaw Exploitation",
+        "type": "challenge",
+        "data": {
+          "action": "start_challenge",
+          "owasp_id": "A04"
+        }
+      }
+    ]
+  },
+  {
+    "id": "A05",
+    "text": "A05:2021 - Security Misconfiguration",
+    "type": "vulnerability",
+    "data": {
+      "owasp_id": "A05",
+      "description": "Moved up from #6, 90% of applications tested for misconfiguration",
+      "severity": "Medium",
+      "url": "/vulnerability/A05"
+    },
+    "children": [
+      {
+        "id": "A05_info",
+        "text": "Learn About Security Misconfiguration",
+        "type": "info",
+        "data": {
+          "action": "view_vulnerability",
+          "owasp_id": "A05"
+        }
+      },
+      {
+        "id": "A05_challenge",
+        "text": "CTF Challenge: Debug Mode Exposure",
+        "type": "challenge",
+        "data": {
+          "action": "start_challenge",
+          "owasp_id": "A05"
+        }
+      }
+    ]
+  },
+  {
+    "id": "A06",
+    "text": "A06:2021 - Vulnerable and Outdated Components",
+    "type": "vulnerability",
+    "data": {
+      "owasp_id": "A06",
+      "description": "Previously Using Components with Known Vulnerabilities, moved up from #9",
+      "severity": "Medium",
+      "url": "/vulnerability/A06"
+    },
+    "children": [
+      {
+        "id": "A06_info",
+        "text": "Learn About Vulnerable Components",
+        "type": "info",
+        "data": {
+          "action": "view_vulnerability",
+          "owasp_id": "A06"
+        }
+      },
+      {
+        "id": "A06_challenge",
+        "text": "CTF Challenge: Outdated Library Exploitation",
+        "type": "challenge",
+        "data": {
+          "action": "start_challenge",
+          "owasp_id": "A06"
+        }
+      }
+    ]
+  },
+  {
+    "id": "A07",
+    "text": "A07:2021 - Identification and Authentication Failures",
+    "type": "vulnerability",
+    "data": {
+      "owasp_id": "A07",
+      "description": "Previously Broken Authentication, includes more failures around identity confirmation",
+      "severity": "High",
+      "url": "/vulnerability/A07"
+    },
+    "children": [
+      {
+        "id": "A07_info",
+        "text": "Learn About Authentication Failures",
+        "type": "info",
+        "data": {
+          "action": "view_vulnerability",
+          "owasp_id": "A07"
+        }
+      },
+      {
+        "id": "A07_challenge",
+        "text": "CTF Challenge: Weak Password Attack",
+        "type": "challenge",
+        "data": {
+          "action": "start_challenge",
+          "owasp_id": "A07"
+        }
+      }
+    ]
+  },
+  {
+    "id": "A08",
+    "text": "A08:2021 - Software and Data Integrity Failures",
+    "type": "vulnerability",
+    "data": {
+      "owasp_id": "A08",
+      "description": "New category focusing on software updates, critical data, and CI/CD pipelines",
+      "severity": "Medium",
+      "url": "/vulnerability/A08"
+    },
+    "children": [
+      {
+        "id": "A08_info",
+        "text": "Learn About Data Integrity Failures",
+        "type": "info",
+        "data": {
+          "action": "view_vulnerability",
+          "owasp_id": "A08"
+        }
+      },
+      {
+        "id": "A08_challenge",
+        "text": "CTF Challenge: Insecure Deserialization",
+        "type": "challenge",
+        "data": {
+          "action": "start_challenge",
+          "owasp_id": "A08"
+        }
+      }
+    ]
+  },
+  {
+    "id": "A09",
+    "text": "A09:2021 - Security Logging and Monitoring Failures",
+    "type": "vulnerability",
+    "data": {
+      "owasp_id": "A09",
+      "description": "Previously Insufficient Logging & Monitoring, expanded scope",
+      "severity": "Medium",
+      "url": "/vulnerability/A09"
+    },
+    "children": [
+      {
+        "id": "A09_info",
+        "text": "Learn About Logging Failures",
+        "type": "info",
+        "data": {
+          "action": "view_vulnerability",
+          "owasp_id": "A09"
+        }
+      },
+      {
+        "id": "A09_challenge",
+        "text": "CTF Challenge: Audit Trail Bypass",
+        "type": "challenge",
+        "data": {
+          "action": "start_challenge",
+          "owasp_id": "A09"
+        }
+      }
+    ]
+  },
+  {
+    "id": "A10",
+    "text": "A10:2021 - Server-Side Request Forgery (SSRF)",
+    "type": "vulnerability",
+    "data": {
+      "owasp_id": "A10",
+      "description": "New category, occurs when a web application fetches a remote resource without validating the user-supplied URL",
+      "severity": "Medium",
+      "url": "/vulnerability/A10"
+    },
+    "children": [
+      {
+        "id": "A10_info",
+        "text": "Learn About SSRF",
+        "type": "info",
+        "data": {
+          "action": "view_vulnerability",
+          "owasp_id": "A10"
+        }
+      },
+      {
+        "id": "A10_challenge",
+        "text": "CTF Challenge: Internal Resource Access",
+        "type": "challenge",
+        "data": {
+          "action": "start_challenge",
+          "owasp_id": "A10"
+        }
+      }
+    ]
+  }
+]

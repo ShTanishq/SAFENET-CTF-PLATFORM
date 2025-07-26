@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold text-primary">
+                    <i class="fas fa-shield-alt"></i>
+                    OWASP Top 10 2021
+                </h1>
+                <p class="lead">
+                    Master web application security through interactive CTF challenges based on the 
+                    most critical security risks identified by the Open Web Application Security Project.
+                </p>
+                <div class="d-flex gap-3 mb-4">
+                    <div class="stat-card">
+                        <h3 class="text-primary">10</h3>
+                        <p class="mb-0">Vulnerability Categories</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 class="text-success">10</h3>
+                        <p class="mb-0">CTF Challenges</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 class="text-warning">1000</h3>
+                        <p class="mb-0">Points Available</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="security-badge">
+                    <i class="fas fa-bug fa-5x text-danger mb-3"></i>
+                    <h3>Learn. Practice. Secure.</h3>
+                    <p>Hands-on cybersecurity education through real-world vulnerability scenarios</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-sitemap"></i>
+                        OWASP Top 10 2021 Navigation
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-3">
+                        Explore the most critical web application security risks. Click on any category to learn more 
+                        or access the corresponding CTF challenge.
+                    </p>
+                    <div id="owasp-tree" class="tree-container"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle"></i>
+                        How It Works
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="step-list">
+                        <div class="step-item">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h6>Explore the Tree</h6>
+                                <p class="mb-0">Navigate through OWASP Top 10 categories using the interactive tree menu</p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h6>Learn About Vulnerabilities</h6>
+                                <p class="mb-0">Read detailed explanations of each security risk and its real-world impact</p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h6>Solve CTF Challenges</h6>
+                                <p class="mb-0">Practice exploitation techniques in safe, controlled environments</p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h6>Earn Points</h6>
+                                <p class="mb-0">Submit correct flags to earn points and track your progress</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Security Notice
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="mb-2">
+                        <strong>Educational Environment:</strong> All vulnerabilities are intentionally implemented 
+                        for learning purposes only.
+                    </p>
+                    <p class="mb-2">
+                        <strong>Ethical Use:</strong> Practice responsible disclosure and ethical hacking principles.
+                    </p>
+                    <p class="mb-0">
+                        <strong>Real-World Application:</strong> Never attempt these techniques on systems you don't own.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/tree.js') }}"></script>
+<script>
+    // Initialize the OWASP tree with data from backend
+    const treeData = {{ tree_data|safe }};
+    initializeOwaspTree(treeData);
+</script>
+{% endblock %}
