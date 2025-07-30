@@ -11,6 +11,9 @@ let duration = 750;
 let treeLayout;
 
 function initializeOwaspTree(treeData) {
+    // Remove loading indicator
+    $('#owasp-tree .tree-loading').remove();
+    
     // Convert jsTree format to D3 hierarchy
     d3TreeData = convertToD3Format(treeData);
     
@@ -91,8 +94,10 @@ function initializeD3Tree() {
     g = svg.append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
     
-    // Create tree layout
-    treeLayout = d3.tree().size([height, width]);
+    // Create tree layout with better spacing
+    treeLayout = d3.tree()
+        .size([height, width])
+        .separation((a, b) => (a.parent === b.parent ? 1 : 2) / a.depth);
     
     // Create diagonal path generator
     diagonal = d3.linkHorizontal()
@@ -192,7 +197,7 @@ function update(source) {
         .attr('dy', '.35em')
         .attr('x', d => d.children || d._children ? -13 : 13)
         .attr('text-anchor', d => d.children || d._children ? 'end' : 'start')
-        .text(d => truncateText(d.data.name, 30))
+        .text(d => truncateText(d.data.name, 35))
         .style('fill-opacity', 1e-6)
         .style('font-size', d => getNodeFontSize(d))
         .style('font-weight', d => getNodeFontWeight(d))
@@ -202,7 +207,7 @@ function update(source) {
     nodeEnter.append('text')
         .attr('class', 'node-icon')
         .attr('dy', '.35em')
-        .attr('x', d => d.children || d._children ? -25 : -8)
+        .attr('x', d => d.children || d._children ? -30 : -10)
         .attr('text-anchor', 'middle')
         .style('font-family', 'Font Awesome 6 Free')
         .style('font-weight', '900')
@@ -251,7 +256,7 @@ function update(source) {
     const linkEnter = link.enter().insert('path', 'g')
         .attr('class', 'link')
         .style('fill', 'none')
-        .style('stroke', '#555')
+        .style('stroke', '#cbd5e0')
         .style('stroke-opacity', '0.6')
         .style('stroke-width', '2px')
         .attr('d', d => {
@@ -262,7 +267,7 @@ function update(source) {
     // Transition links to their new position
     linkEnter.merge(link).transition()
         .duration(duration)
-        .attr('d', diagonal);
+        .attr('d', d => diagonal({source: {x: d.parent.x, y: d.parent.y}, target: {x: d.x, y: d.y}}));
     
     // Remove any exiting links
     link.exit().transition()
