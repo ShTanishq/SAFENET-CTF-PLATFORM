@@ -112,19 +112,11 @@ function initializeD3Tree() {
     // Center the tree after initial render
     setTimeout(() => {
         try {
-            const rootNode = g.select('.node');
-            if (!rootNode.empty() && rootNode.node()) {
-                const bbox = rootNode.node().getBBox();
-                if (bbox && typeof bbox.x !== 'undefined' && typeof bbox.y !== 'undefined') {
-                    const centerX = width / 2 - bbox.x - bbox.width / 2;
-                    const centerY = height / 2 - bbox.y - bbox.height / 2;
-                    svg.call(zoom.transform, d3.zoomIdentity.translate(centerX, centerY));
-                }
-            }
+            centerTree();
         } catch (e) {
             console.log('Tree will be centered once fully rendered');
         }
-    }, 300);
+    }, 500);
 }
 
 function collapse(d) {
@@ -181,12 +173,12 @@ function update(source) {
         .on('mouseover', handleMouseOver)
         .on('mouseout', handleMouseOut);
     
-    // Add circles for the nodes
+    // Add circles for the nodes with enhanced styling
     nodeEnter.append('circle')
         .attr('r', 1e-6)
         .style('fill', d => getNodeColor(d))
         .style('stroke', d => getNodeStrokeColor(d))
-        .style('stroke-width', '2px')
+        .style('stroke-width', d => getNodeStrokeWidth(d))
         .style('cursor', 'pointer')
         .attr('class', d => {
             let classes = [];
@@ -350,11 +342,26 @@ function getSeverityColor(severity) {
 function getNodeRadius(d) {
     switch (d.data.type) {
         case 'root':
-            return 12;
+            return 16;
         case 'vulnerability':
+            return 10;
+        case 'challenge':
+            return 8;
+        case 'info':
             return 8;
         default:
             return 6;
+    }
+}
+
+function getNodeStrokeWidth(d) {
+    switch (d.data.type) {
+        case 'root':
+            return '6px';
+        case 'vulnerability':
+            return '4px';
+        default:
+            return '3px';
     }
 }
 
@@ -408,32 +415,52 @@ function truncateText(text, maxLength) {
 }
 
 function handleMouseOver(event, d) {
-    // Create tooltip
+    // Create enhanced tooltip with beautiful styling
     const tooltip = d3.select('body').append('div')
         .attr('class', 'tree-tooltip')
         .style('position', 'absolute')
-        .style('background', 'rgba(0, 0, 0, 0.8)')
-        .style('color', 'white')
-        .style('padding', '10px')
-        .style('border-radius', '5px')
-        .style('font-size', '12px')
-        .style('max-width', '300px')
+        .style('background', 'rgba(255, 255, 255, 0.95)')
+        .style('color', '#2d3748')
+        .style('padding', '12px 16px')
+        .style('border-radius', '12px')
+        .style('font-size', '13px')
         .style('z-index', '1000')
+        .style('max-width', '280px')
+        .style('box-shadow', '0 8px 32px rgba(0, 0, 0, 0.15)')
+        .style('backdrop-filter', 'blur(10px)')
+        .style('border', '1px solid rgba(0, 0, 0, 0.1)')
+        .style('font-family', 'Inter, sans-serif')
         .style('opacity', 0);
     
-    let tooltipHTML = `<strong>${d.data.name}</strong>`;
+    let content = `<div style="font-weight: 600; margin-bottom: 8px; color: ${getNodeColor(d)};">${d.data.name}</div>`;
+    
     if (d.data.description) {
-        tooltipHTML += `<br><span style="font-size: 11px;">${d.data.description}</span>`;
-    }
-    if (d.data.severity) {
-        tooltipHTML += `<br><span style="color: ${getSeverityColor(d.data.severity)};">Severity: ${d.data.severity}</span>`;
+        content += `<div style="margin-bottom: 8px; line-height: 1.4; color: #4a5568;">${d.data.description}</div>`;
     }
     
-    tooltip.html(tooltipHTML)
-        .style('left', (event.pageX + 10) + 'px')
+    if (d.data.severity) {
+        const severityColor = getSeverityColor(d.data.severity);
+        content += `<div style="display: inline-block; background: ${severityColor}; color: white; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 500;">${d.data.severity} Severity</div>`;
+    }
+    
+    if (d.data.type === 'root') {
+        content += `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 11px; color: #718096;">🌳 Knowledge Tree Root</div>`;
+    } else if (d.data.type === 'challenge') {
+        content += `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 11px; color: #718096;">🏆 Interactive Challenge</div>`;
+    } else if (d.data.type === 'info') {
+        content += `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 11px; color: #718096;">📚 Learning Content</div>`;
+    }
+    
+    if (d.children || d._children) {
+        const childCount = (d.children || d._children).length;
+        content += `<div style="margin-top: 8px; font-size: 11px; color: #9ca3af;">Click to ${d.children ? 'collapse' : 'expand'} ${childCount} item${childCount > 1 ? 's' : ''}</div>`;
+    }
+    
+    tooltip.html(content)
+        .style('left', (event.pageX + 15) + 'px')
         .style('top', (event.pageY - 10) + 'px')
         .transition()
-        .duration(200)
+        .duration(300)
         .style('opacity', 1);
 }
 
@@ -563,6 +590,13 @@ function setupTreeSearch() {
     
     // Add control buttons
     setupTreeControls();
+    
+    // Store functions globally for button access
+    window.owaspTreeFunctions = {
+        expandAll: expandAll,
+        collapseAll: collapseAll,
+        centerTree: centerTree
+    };
 }
 
 function searchTree(searchTerm) {
@@ -617,56 +651,45 @@ function searchTree(searchTerm) {
 }
 
 function setupTreeControls() {
-    // Add expand/collapse all buttons
-    const controlsContainer = document.getElementById('tree-controls');
-    if (controlsContainer) {
-        controlsContainer.innerHTML = `
-            <div class="btn-group mb-3" role="group">
-                <button type="button" class="btn btn-outline-primary btn-sm" id="expand-all">
-                    <i class="fas fa-expand-arrows-alt"></i> Expand All
-                </button>
-                <button type="button" class="btn btn-outline-secondary btn-sm" id="collapse-all">
-                    <i class="fas fa-compress-arrows-alt"></i> Collapse All
-                </button>
-                <button type="button" class="btn btn-outline-info btn-sm" id="center-tree">
-                    <i class="fas fa-crosshairs"></i> Center
-                </button>
-            </div>
-        `;
-        
-        // Add event listeners
-        document.getElementById('expand-all').addEventListener('click', () => {
-            expandAll(root);
-            update(root);
-        });
-        
-        document.getElementById('collapse-all').addEventListener('click', () => {
-            root.children.forEach(collapse);
-            update(root);
-        });
-        
-        document.getElementById('center-tree').addEventListener('click', centerTree);
-    }
+    // Controls are now in the template header
 }
 
 function centerTree() {
-    const bounds = g.node().getBBox();
-    const parent = g.node().parentElement;
-    const fullWidth = parent.clientWidth || parent.parentNode.clientWidth;
-    const fullHeight = parent.clientHeight || parent.parentNode.clientHeight;
-    const width = bounds.width;
-    const height = bounds.height;
-    const midX = bounds.x + width / 2;
-    const midY = bounds.y + height / 2;
-    
-    if (width == 0 || height == 0) return; // nothing to fit
-    
-    const scale = 0.85 / Math.max(width / fullWidth, height / fullHeight);
-    const translate = [fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY];
-    
-    svg.transition()
-        .duration(750)
-        .call(zoom.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale));
+    try {
+        const allNodes = g.selectAll('.node').nodes();
+        if (allNodes.length === 0) return;
+        
+        // Calculate bounds of all nodes
+        let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+        
+        allNodes.forEach(node => {
+            const transform = d3.select(node).attr('transform');
+            if (transform) {
+                const match = transform.match(/translate\(([^,]+),([^)]+)\)/);
+                if (match) {
+                    const x = parseFloat(match[1]);
+                    const y = parseFloat(match[2]);
+                    minX = Math.min(minX, x);
+                    maxX = Math.max(maxX, x);
+                    minY = Math.min(minY, y);
+                    maxY = Math.max(maxY, y);
+                }
+            }
+        });
+        
+        if (isFinite(minX) && isFinite(maxX) && isFinite(minY) && isFinite(maxY)) {
+            const centerX = (minX + maxX) / 2;
+            const centerY = (minY + maxY) / 2;
+            const offsetX = width / 2 - centerX;
+            const offsetY = height / 2 - centerY;
+            
+            svg.transition()
+                .duration(750)
+                .call(zoom.transform, d3.zoomIdentity.translate(offsetX, offsetY));
+        }
+    } catch (e) {
+        console.log('Tree centering will be available after render');
+    }
 }
 
 // Export functions for global access
