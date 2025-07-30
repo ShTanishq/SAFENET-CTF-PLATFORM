@@ -1,60 +1,73 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- Modern Header Section -->
-<div class="bg-gradient" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-    <div class="container py-5">
-        <div class="row align-items-center">
+<!-- Creative Hero Section -->
+<div class="hero-creative" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%); min-height: 50vh; position: relative; overflow: hidden;">
+    <!-- Animated Background Elements -->
+    <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+    </div>
+    
+    <div class="container py-5 position-relative" style="z-index: 2;">
+        <div class="row align-items-center min-vh-50">
             <div class="col-lg-8">
-                <h1 class="display-4 fw-bold mb-3">
-                    <i class="fas fa-shield-alt me-3"></i>
-                    OWASP Top 10 2021
-                </h1>
-                <p class="lead mb-4">
-                    Interactive cybersecurity education platform featuring hands-on CTF challenges 
-                    based on the most critical web application security risks.
-                </p>
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <div class="d-flex align-items-center">
-                            <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
-                                <i class="fas fa-bug fa-lg"></i>
-                            </div>
-                            <div>
-                                <h4 class="mb-0">10</h4>
-                                <small>Vulnerabilities</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="d-flex align-items-center">
-                            <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
-                                <i class="fas fa-flag fa-lg"></i>
-                            </div>
-                            <div>
-                                <h4 class="mb-0">10</h4>
-                                <small>CTF Challenges</small>
+                <div class="hero-content">
+                    <h1 class="display-3 fw-light mb-4" style="color: #2d3748; font-family: 'Inter', sans-serif;">
+                        <span class="fw-bold">OWASP</span> Top 10
+                        <br>
+                        <span style="background: linear-gradient(45deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Learning Hub</span>
+                    </h1>
+                    <p class="lead mb-5" style="color: #4a5568; font-size: 1.25rem; line-height: 1.6;">
+                        Discover web security through interactive exploration and hands-on challenges. 
+                        A gentle introduction to cybersecurity concepts.
+                    </p>
+                    <div class="stats-grid row g-4">
+                        <div class="col-md-4">
+                            <div class="stat-card-creative">
+                                <div class="stat-icon">
+                                    <i class="fas fa-lightbulb"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3>10</h3>
+                                    <p>Security Topics</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="d-flex align-items-center">
-                            <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
-                                <i class="fas fa-trophy fa-lg"></i>
+                        <div class="col-md-4">
+                            <div class="stat-card-creative">
+                                <div class="stat-icon">
+                                    <i class="fas fa-puzzle-piece"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3>10</h3>
+                                    <p>Interactive Challenges</p>
+                                </div>
                             </div>
-                            <div>
-                                <h4 class="mb-0">1075</h4>
-                                <small>Total Points</small>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card-creative">
+                                <div class="stat-icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3>1075</h3>
+                                    <p>Achievement Points</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 text-center">
-                <div class="bg-white bg-opacity-10 rounded-3 p-4">
-                    <i class="fas fa-graduation-cap fa-4x mb-3"></i>
-                    <h5>Learn. Practice. Secure.</h5>
-                    <p class="mb-0">Master cybersecurity through practical experience</p>
+            <div class="col-lg-4">
+                <div class="hero-illustration">
+                    <div class="illustration-card">
+                        <i class="fas fa-tree fa-4x mb-3" style="color: #48bb78;"></i>
+                        <h4 style="color: #2d3748;">Explore & Learn</h4>
+                        <p style="color: #718096;">Navigate through knowledge with our interactive tree interface</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -62,153 +75,156 @@
 </div>
 
 <!-- Main Content -->
-<div class="container-fluid py-4" style="background: #f8f9fa;">
-    <div class="row g-4">
-        <!-- Tree Navigation Panel -->
-        <div class="col-lg-8">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-header bg-white border-bottom-0 py-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0 text-dark">
-                            <i class="fas fa-sitemap text-primary me-2"></i>
-                            OWASP Top 10 2021 Framework
-                        </h5>
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-outline-secondary btn-sm" onclick="window.owaspTreeFunctions?.expandAll()">
-                                <i class="fas fa-expand-arrows-alt"></i>
-                            </button>
-                            <button class="btn btn-outline-secondary btn-sm" onclick="window.owaspTreeFunctions?.collapseAll()">
-                                <i class="fas fa-compress-arrows-alt"></i>
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm" onclick="window.owaspTreeFunctions?.centerTree()">
-                                <i class="fas fa-crosshairs"></i>
-                            </button>
+<div class="main-content" style="background: linear-gradient(180deg, #f7fafc 0%, #edf2f7 100%); min-height: 100vh;">
+    <div class="container-fluid py-5">
+        <div class="row g-4">
+            <!-- Tree Navigation Panel -->
+            <div class="col-lg-8">
+                <div class="tree-panel">
+                    <div class="panel-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="panel-title">
+                                <i class="fas fa-seedling me-2" style="color: #48bb78;"></i>
+                                <span>Knowledge Tree</span>
+                            </div>
+                            <div class="panel-controls">
+                                <button class="control-btn" onclick="window.owaspTreeFunctions?.expandAll()" title="Expand All">
+                                    <i class="fas fa-expand-arrows-alt"></i>
+                                </button>
+                                <button class="control-btn" onclick="window.owaspTreeFunctions?.collapseAll()" title="Collapse All">
+                                    <i class="fas fa-compress-arrows-alt"></i>
+                                </button>
+                                <button class="control-btn" onclick="window.owaspTreeFunctions?.centerTree()" title="Center View">
+                                    <i class="fas fa-crosshairs"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-body p-0">
+                    
                     <!-- Search Bar -->
-                    <div class="p-3 border-bottom bg-light">
-                        <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0">
-                                <i class="fas fa-search text-muted"></i>
-                            </span>
-                            <input type="text" class="form-control border-start-0" id="tree-search" 
-                                   placeholder="Search OWASP categories, vulnerabilities, or challenges...">
+                    <div class="search-section">
+                        <div class="search-container">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" class="search-input" id="tree-search" 
+                                   placeholder="Discover topics, challenges, and learning paths...">
                         </div>
                     </div>
                     
                     <!-- Tree Container -->
-                    <div id="owasp-tree" class="tree-container" style="min-height: 700px; background: white;"></div>
+                    <div id="owasp-tree" class="tree-canvas"></div>
                 </div>
             </div>
-        </div>
         
         <!-- Sidebar Panel -->
         <div class="col-lg-4">
             <!-- Selected Item Panel -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-gradient text-white" style="background: linear-gradient(45deg, #4f46e5, #7c3aed) !important;">
-                    <h6 class="mb-0">
-                        <i class="fas fa-eye me-2"></i>
-                        Selected Item
-                    </h6>
+            <div class="info-panel mb-4">
+                <div class="panel-header-creative">
+                    <i class="fas fa-eye me-2"></i>
+                    <span>Current Focus</span>
                 </div>
-                <div class="card-body">
+                <div class="panel-content">
                     <div id="node-info">
-                        <div class="text-center py-4">
-                            <i class="fas fa-mouse-pointer fa-2x text-muted mb-3"></i>
-                            <p class="text-muted mb-0">Click on any node in the tree to view detailed information</p>
+                        <div class="welcome-state">
+                            <i class="fas fa-hand-point-up fa-2x mb-3" style="color: #fbb6ce;"></i>
+                            <p>Click any item in the knowledge tree to explore detailed information</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Quick Guide -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-success text-white">
-                    <h6 class="mb-0">
-                        <i class="fas fa-rocket me-2"></i>
-                        Quick Start Guide
-                    </h6>
+            <!-- Journey Guide -->
+            <div class="journey-panel mb-4">
+                <div class="panel-header-creative">
+                    <i class="fas fa-map me-2"></i>
+                    <span>Learning Journey</span>
                 </div>
-                <div class="card-body">
-                    <div class="d-flex align-items-start mb-3">
-                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 24px; height: 24px; font-size: 12px;">1</div>
-                        <div>
-                            <h6 class="mb-1">Explore the Framework</h6>
-                            <small class="text-muted">Navigate the interactive OWASP tree structure</small>
+                <div class="panel-content">
+                    <div class="journey-steps">
+                        <div class="journey-step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h6>Discover</h6>
+                                <p>Explore the knowledge tree and find interesting topics</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="d-flex align-items-start mb-3">
-                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 24px; height: 24px; font-size: 12px;">2</div>
-                        <div>
-                            <h6 class="mb-1">Learn Vulnerabilities</h6>
-                            <small class="text-muted">Study each security risk and its impact</small>
+                        <div class="journey-step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h6>Learn</h6>
+                                <p>Read about security concepts in easy-to-understand format</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="d-flex align-items-start mb-3">
-                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 24px; height: 24px; font-size: 12px;">3</div>
-                        <div>
-                            <h6 class="mb-1">Practice CTF Challenges</h6>
-                            <small class="text-muted">Test your skills in safe environments</small>
+                        <div class="journey-step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h6>Practice</h6>
+                                <p>Try hands-on challenges in a safe environment</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="d-flex align-items-start">
-                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 24px; height: 24px; font-size: 12px;">4</div>
-                        <div>
-                            <h6 class="mb-1">Earn Points</h6>
-                            <small class="text-muted">Submit flags and track your progress</small>
+                        <div class="journey-step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h6>Achieve</h6>
+                                <p>Collect points and track your learning progress</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Severity Legend -->
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-info text-white">
-                    <h6 class="mb-0">
-                        <i class="fas fa-palette me-2"></i>
-                        Severity Levels
-                    </h6>
+            <!-- Difficulty Guide -->
+            <div class="difficulty-panel mb-4">
+                <div class="panel-header-creative">
+                    <i class="fas fa-chart-line me-2"></i>
+                    <span>Difficulty Levels</span>
                 </div>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="small">Critical</span>
-                        <span class="badge" style="background-color: #dc3545;">High Risk</span>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="small">High</span>
-                        <span class="badge" style="background-color: #fd7e14;">Major</span>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="small">Medium</span>
-                        <span class="badge" style="background-color: #ffc107; color: #000;">Moderate</span>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="small">Low</span>
-                        <span class="badge" style="background-color: #28a745;">Minor</span>
+                <div class="panel-content">
+                    <div class="difficulty-items">
+                        <div class="difficulty-item">
+                            <div class="difficulty-dot" style="background: linear-gradient(45deg, #ff6b6b, #ff8e8e);"></div>
+                            <span>Critical</span>
+                            <span class="difficulty-label">Very Important</span>
+                        </div>
+                        <div class="difficulty-item">
+                            <div class="difficulty-dot" style="background: linear-gradient(45deg, #ffa726, #ffb74d);"></div>
+                            <span>High</span>
+                            <span class="difficulty-label">Important</span>
+                        </div>
+                        <div class="difficulty-item">
+                            <div class="difficulty-dot" style="background: linear-gradient(45deg, #ffee58, #fff176);"></div>
+                            <span>Medium</span>
+                            <span class="difficulty-label">Moderate</span>
+                        </div>
+                        <div class="difficulty-item">
+                            <div class="difficulty-dot" style="background: linear-gradient(45deg, #66bb6a, #81c784);"></div>
+                            <span>Low</span>
+                            <span class="difficulty-label">Good to Know</span>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Security Notice -->
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-warning text-dark">
-                    <h6 class="mb-0">
-                        <i class="fas fa-exclamation-triangle me-2"></i>
-                        Important Notice
-                    </h6>
+            <!-- Friendly Reminder -->
+            <div class="reminder-panel">
+                <div class="panel-header-creative">
+                    <i class="fas fa-heart me-2"></i>
+                    <span>Friendly Reminder</span>
                 </div>
-                <div class="card-body">
-                    <div class="alert alert-warning mb-3">
-                        <small><strong>Educational Only:</strong> All vulnerabilities are implemented for learning purposes</small>
-                    </div>
-                    <div class="alert alert-info mb-3">
-                        <small><strong>Ethical Use:</strong> Practice responsible disclosure principles</small>
-                    </div>
-                    <div class="alert alert-danger mb-0">
-                        <small><strong>Legal Warning:</strong> Never test on systems you don't own</small>
+                <div class="panel-content">
+                    <div class="reminder-items">
+                        <div class="reminder-item">
+                            <i class="fas fa-graduation-cap" style="color: #9f7aea;"></i>
+                            <p><strong>Learning Environment</strong><br>All content is designed for educational purposes</p>
+                        </div>
+                        <div class="reminder-item">
+                            <i class="fas fa-handshake" style="color: #4fd1c7;"></i>
+                            <p><strong>Ethical Practice</strong><br>Always follow responsible security guidelines</p>
+                        </div>
+                        <div class="reminder-item">
+                            <i class="fas fa-shield-alt" style="color: #68d391;"></i>
+                            <p><strong>Safe Learning</strong><br>Only practice on systems you own or have permission to test</p>
+                        </div>
                     </div>
                 </div>
             </div>

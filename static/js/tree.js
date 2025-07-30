@@ -111,18 +111,20 @@ function initializeD3Tree() {
     
     // Center the tree after initial render
     setTimeout(() => {
-        const rootNode = g.select('.node');
-        if (!rootNode.empty()) {
-            try {
+        try {
+            const rootNode = g.select('.node');
+            if (!rootNode.empty() && rootNode.node()) {
                 const bbox = rootNode.node().getBBox();
-                const centerX = width / 2 - bbox.x;
-                const centerY = height / 2 - bbox.y;
-                svg.call(zoom.transform, d3.zoomIdentity.translate(centerX, centerY));
-            } catch (e) {
-                console.log('Tree centering will be available after render');
+                if (bbox && typeof bbox.x !== 'undefined' && typeof bbox.y !== 'undefined') {
+                    const centerX = width / 2 - bbox.x - bbox.width / 2;
+                    const centerY = height / 2 - bbox.y - bbox.height / 2;
+                    svg.call(zoom.transform, d3.zoomIdentity.translate(centerX, centerY));
+                }
             }
+        } catch (e) {
+            console.log('Tree will be centered once fully rendered');
         }
-    }, 100);
+    }, 300);
 }
 
 function collapse(d) {
@@ -314,15 +316,15 @@ function click(event, d) {
 function getNodeColor(d) {
     switch (d.data.type) {
         case 'root':
-            return '#2E86AB';
+            return '#667eea';
         case 'vulnerability':
             return getSeverityColor(d.data.severity);
         case 'challenge':
-            return '#28a745';
+            return '#48bb78';
         case 'info':
-            return '#17a2b8';
+            return '#4fd1c7';
         default:
-            return '#6c757d';
+            return '#a0aec0';
     }
 }
 
@@ -333,15 +335,15 @@ function getNodeStrokeColor(d) {
 function getSeverityColor(severity) {
     switch (severity) {
         case 'Critical':
-            return '#dc3545';
+            return '#ff6b6b';
         case 'High':
-            return '#fd7e14';
+            return '#ffa726';
         case 'Medium':
-            return '#ffc107';
+            return '#ffee58';
         case 'Low':
-            return '#28a745';
+            return '#66bb6a';
         default:
-            return '#6c757d';
+            return '#a0aec0';
     }
 }
 
@@ -389,15 +391,15 @@ function getNodeIcon(d) {
 function getIconColor(d) {
     switch (d.data.type) {
         case 'root':
-            return '#2E86AB';
+            return '#667eea';
         case 'vulnerability':
-            return '#dc3545';
+            return getSeverityColor(d.data.severity);
         case 'challenge':
-            return '#28a745';
+            return '#48bb78';
         case 'info':
-            return '#17a2b8';
+            return '#4fd1c7';
         default:
-            return '#6c757d';
+            return '#a0aec0';
     }
 }
 
