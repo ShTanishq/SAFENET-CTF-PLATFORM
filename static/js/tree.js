@@ -1,73 +1,580 @@
 /**
- * OWASP Top 10 2021 - Interactive Tree Management
+ * OWASP Top 10 2021 - Interactive D3.js Tree Visualization
+ * Inspired by osintframework.com
  */
 
 let owaspTree;
+let d3TreeData;
+let svg, g, tree, diagonal, zoom;
+let root, nodes, links;
+let duration = 750;
+let treeLayout;
 
 function initializeOwaspTree(treeData) {
-    const $tree = $('#owasp-tree');
+    // Convert jsTree format to D3 hierarchy
+    d3TreeData = convertToD3Format(treeData);
     
-    // Configure jsTree
-    $tree.jstree({
-        'core': {
-            'data': treeData,
-            'themes': {
-                'name': 'default',
-                'responsive': true,
-                'variant': 'large',
-                'stripes': true
-            },
-            'expand_selected_onload': false,
-            'worker': true,
-            'force_text': true,
-            'dblclick_toggle': true
-        },
-        'plugins': ['wholerow', 'types', 'search'],
-        'types': {
-            'default': {
-                'icon': 'fas fa-folder text-primary'
-            },
-            'vulnerability': {
-                'icon': 'fas fa-bug text-danger'
-            },
-            'challenge': {
-                'icon': 'fas fa-flag text-success'
-            },
-            'info': {
-                'icon': 'fas fa-info-circle text-info'
-            }
-        },
-        'search': {
-            'case_insensitive': true,
-            'show_only_matches': true,
-            'show_only_matches_children': true
-        }
-    });
-
-    // Handle node selection
-    $tree.on('select_node.jstree', function (e, data) {
-        handleNodeClick(data.node);
-    });
-
-    // Handle node activation (double-click or Enter)
-    $tree.on('activate_node.jstree', function (e, data) {
-        handleNodeActivation(data.node);
-    });
-
-    // Expand root nodes by default
-    $tree.on('ready.jstree', function() {
-        $tree.jstree('open_node', $tree.jstree('get_node', '#').children);
-        
-        // Add custom styling to OWASP category nodes
-        addOwaspCategoryIcons();
-    });
-
-    // Store tree reference
-    owaspTree = $tree;
+    // Initialize D3 tree visualization
+    initializeD3Tree();
     
-    // Add search functionality
+    // Setup search functionality
     setupTreeSearch();
 }
+
+function convertToD3Format(jsTreeData) {
+    // Create root node for OWASP framework
+    const root = {
+        name: "OWASP Top 10 2021",
+        description: "Web Application Security Risks",
+        type: "root",
+        children: []
+    };
+    
+    // Convert each OWASP category
+    jsTreeData.forEach(item => {
+        const category = {
+            name: item.text,
+            description: item.data.description,
+            type: item.type,
+            owasp_id: item.data.owasp_id,
+            severity: item.data.severity,
+            children: []
+        };
+        
+        // Add child nodes (info and challenge)
+        if (item.children) {
+            item.children.forEach(child => {
+                category.children.push({
+                    name: child.text,
+                    type: child.type,
+                    action: child.data.action,
+                    owasp_id: child.data.owasp_id,
+                    parent: category
+                });
+            });
+        }
+        
+        root.children.push(category);
+    });
+    
+    return root;
+}
+
+function initializeD3Tree() {
+    // Clear existing content
+    $('#owasp-tree').empty();
+    
+    // Set dimensions and margins
+    const container = document.getElementById('owasp-tree');
+    const margin = { top: 20, right: 120, bottom: 20, left: 120 };
+    const width = container.offsetWidth - margin.right - margin.left;
+    const height = 800 - margin.top - margin.bottom;
+    
+    // Create SVG
+    svg = d3.select('#owasp-tree')
+        .append('svg')
+        .attr('width', '100%')
+        .attr('height', height + margin.top + margin.bottom)
+        .attr('viewBox', `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
+        .style('font', '12px sans-serif');
+    
+    // Create zoom behavior
+    zoom = d3.zoom()
+        .scaleExtent([0.1, 3])
+        .on('zoom', function(event) {
+            g.attr('transform', event.transform);
+        });
+    
+    svg.call(zoom);
+    
+    // Create container group
+    g = svg.append('g')
+        .attr('transform', `translate(${margin.left},${margin.top})`);
+    
+    // Create tree layout
+    treeLayout = d3.tree().size([height, width]);
+    
+    // Create diagonal path generator
+    diagonal = d3.linkHorizontal()
+        .x(d => d.y)
+        .y(d => d.x);
+    
+    // Initialize with data
+    root = d3.hierarchy(d3TreeData);
+    root.x0 = height / 2;
+    root.y0 = 0;
+    
+    // Collapse children initially except root
+    root.children.forEach(collapse);
+    
+    update(root);
+    
+    // Center the tree
+    const rootNode = g.select('.node');
+    if (!rootNode.empty()) {
+        const bbox = rootNode.node().getBBox();
+        const centerX = width / 2 - bbox.x;
+        const centerY = height / 2 - bbox.y;
+        svg.call(zoom.transform, d3.zoomIdentity.translate(centerX, centerY));
+    }
+}
+
+function collapse(d) {
+    if (d.children) {
+        d._children = d.children;
+        d._children.forEach(collapse);
+        d.children = null;
+    }
+}
+
+function expand(d) {
+    if (d._children) {
+        d.children = d._children;
+        d._children = null;
+    }
+}
+
+function expandAll(d) {
+    if (d._children) {
+        d.children = d._children;
+        d._children = null;
+    }
+    if (d.children) {
+        d.children.forEach(expandAll);
+    }
+}
+
+function collapseAll(d) {
+    if (d.children) {
+        d._children = d.children;
+        d._children.forEach(collapseAll);
+        d.children = null;
+    }
+}
+
+function update(source) {
+    // Compute the new tree layout
+    const treeData = treeLayout(root);
+    nodes = treeData.descendants();
+    links = treeData.descendants().slice(1);
+    
+    // Normalize for fixed-depth
+    nodes.forEach(d => d.y = d.depth * 200);
+    
+    // Update the nodes
+    const node = g.selectAll('g.node')
+        .data(nodes, d => d.id || (d.id = ++i));
+    
+    // Enter any new nodes at the parent's previous position
+    const nodeEnter = node.enter().append('g')
+        .attr('class', 'node')
+        .attr('transform', d => `translate(${source.y0},${source.x0})`)
+        .on('click', click)
+        .on('mouseover', handleMouseOver)
+        .on('mouseout', handleMouseOut);
+    
+    // Add circles for the nodes
+    nodeEnter.append('circle')
+        .attr('r', 1e-6)
+        .style('fill', d => getNodeColor(d))
+        .style('stroke', d => getNodeStrokeColor(d))
+        .style('stroke-width', '2px')
+        .style('cursor', 'pointer');
+    
+    // Add labels for the nodes
+    nodeEnter.append('text')
+        .attr('dy', '.35em')
+        .attr('x', d => d.children || d._children ? -13 : 13)
+        .attr('text-anchor', d => d.children || d._children ? 'end' : 'start')
+        .text(d => truncateText(d.data.name, 30))
+        .style('fill-opacity', 1e-6)
+        .style('font-size', d => getNodeFontSize(d))
+        .style('font-weight', d => getNodeFontWeight(d))
+        .style('cursor', 'pointer');
+    
+    // Add icons for different node types
+    nodeEnter.append('text')
+        .attr('class', 'node-icon')
+        .attr('dy', '.35em')
+        .attr('x', d => d.children || d._children ? -25 : -8)
+        .attr('text-anchor', 'middle')
+        .style('font-family', 'Font Awesome 6 Free')
+        .style('font-weight', '900')
+        .style('font-size', '14px')
+        .style('fill', d => getIconColor(d))
+        .text(d => getNodeIcon(d))
+        .style('cursor', 'pointer');
+    
+    // Transition nodes to their new position
+    const nodeUpdate = nodeEnter.merge(node);
+    
+    nodeUpdate.transition()
+        .duration(duration)
+        .attr('transform', d => `translate(${d.y},${d.x})`);
+    
+    // Update the node attributes and style
+    nodeUpdate.select('circle')
+        .transition()
+        .duration(duration)
+        .attr('r', d => getNodeRadius(d))
+        .style('fill', d => getNodeColor(d))
+        .style('stroke', d => getNodeStrokeColor(d));
+    
+    nodeUpdate.select('text')
+        .transition()
+        .duration(duration)
+        .style('fill-opacity', 1);
+    
+    // Remove any exiting nodes
+    const nodeExit = node.exit().transition()
+        .duration(duration)
+        .attr('transform', d => `translate(${source.y},${source.x})`)
+        .remove();
+    
+    nodeExit.select('circle')
+        .attr('r', 1e-6);
+    
+    nodeExit.select('text')
+        .style('fill-opacity', 1e-6);
+    
+    // Update the links
+    const link = g.selectAll('path.link')
+        .data(links, d => d.id);
+    
+    // Enter any new links at the parent's previous position
+    const linkEnter = link.enter().insert('path', 'g')
+        .attr('class', 'link')
+        .style('fill', 'none')
+        .style('stroke', '#555')
+        .style('stroke-opacity', '0.6')
+        .style('stroke-width', '2px')
+        .attr('d', d => {
+            const o = {x: source.x0, y: source.y0};
+            return diagonal({source: o, target: o});
+        });
+    
+    // Transition links to their new position
+    linkEnter.merge(link).transition()
+        .duration(duration)
+        .attr('d', diagonal);
+    
+    // Remove any exiting links
+    link.exit().transition()
+        .duration(duration)
+        .attr('d', d => {
+            const o = {x: source.x, y: source.y};
+            return diagonal({source: o, target: o});
+        })
+        .remove();
+    
+    // Store the old positions for transition
+    nodes.forEach(d => {
+        d.x0 = d.x;
+        d.y0 = d.y;
+    });
+}
+
+let i = 0;
+
+function click(event, d) {
+    if (d.children) {
+        d._children = d.children;
+        d.children = null;
+    } else {
+        d.children = d._children;
+        d._children = null;
+    }
+    
+    // Handle node actions
+    if (d.data.action) {
+        handleNodeActivation({
+            data: {
+                action: d.data.action,
+                owasp_id: d.data.owasp_id
+            }
+        });
+    } else if (d.data.owasp_id && d.data.type === 'vulnerability') {
+        // Show vulnerability info
+        showVulnerabilityInfo(d.data.owasp_id);
+    }
+    
+    update(d);
+}
+
+function getNodeColor(d) {
+    switch (d.data.type) {
+        case 'root':
+            return '#2E86AB';
+        case 'vulnerability':
+            return getSeverityColor(d.data.severity);
+        case 'challenge':
+            return '#28a745';
+        case 'info':
+            return '#17a2b8';
+        default:
+            return '#6c757d';
+    }
+}
+
+function getNodeStrokeColor(d) {
+    return d.children || d._children ? '#fff' : getNodeColor(d);
+}
+
+function getSeverityColor(severity) {
+    switch (severity) {
+        case 'Critical':
+            return '#dc3545';
+        case 'High':
+            return '#fd7e14';
+        case 'Medium':
+            return '#ffc107';
+        case 'Low':
+            return '#28a745';
+        default:
+            return '#6c757d';
+    }
+}
+
+function getNodeRadius(d) {
+    switch (d.data.type) {
+        case 'root':
+            return 12;
+        case 'vulnerability':
+            return 8;
+        default:
+            return 6;
+    }
+}
+
+function getNodeFontSize(d) {
+    switch (d.data.type) {
+        case 'root':
+            return '16px';
+        case 'vulnerability':
+            return '14px';
+        default:
+            return '12px';
+    }
+}
+
+function getNodeFontWeight(d) {
+    return d.data.type === 'root' || d.data.type === 'vulnerability' ? 'bold' : 'normal';
+}
+
+function getNodeIcon(d) {
+    switch (d.data.type) {
+        case 'root':
+            return '\uf3ed'; // shield-alt
+        case 'vulnerability':
+            return '\uf188'; // bug
+        case 'challenge':
+            return '\uf024'; // flag
+        case 'info':
+            return '\uf05a'; // info-circle
+        default:
+            return '\uf07c'; // folder
+    }
+}
+
+function getIconColor(d) {
+    switch (d.data.type) {
+        case 'root':
+            return '#2E86AB';
+        case 'vulnerability':
+            return '#dc3545';
+        case 'challenge':
+            return '#28a745';
+        case 'info':
+            return '#17a2b8';
+        default:
+            return '#6c757d';
+    }
+}
+
+function truncateText(text, maxLength) {
+    return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+}
+
+function handleMouseOver(event, d) {
+    // Create tooltip
+    const tooltip = d3.select('body').append('div')
+        .attr('class', 'tree-tooltip')
+        .style('position', 'absolute')
+        .style('background', 'rgba(0, 0, 0, 0.8)')
+        .style('color', 'white')
+        .style('padding', '10px')
+        .style('border-radius', '5px')
+        .style('font-size', '12px')
+        .style('max-width', '300px')
+        .style('z-index', '1000')
+        .style('opacity', 0);
+    
+    let tooltipHTML = `<strong>${d.data.name}</strong>`;
+    if (d.data.description) {
+        tooltipHTML += `<br><span style="font-size: 11px;">${d.data.description}</span>`;
+    }
+    if (d.data.severity) {
+        tooltipHTML += `<br><span style="color: ${getSeverityColor(d.data.severity)};">Severity: ${d.data.severity}</span>`;
+    }
+    
+    tooltip.html(tooltipHTML)
+        .style('left', (event.pageX + 10) + 'px')
+        .style('top', (event.pageY - 10) + 'px')
+        .transition()
+        .duration(200)
+        .style('opacity', 1);
+}
+
+function handleMouseOut() {
+    d3.selectAll('.tree-tooltip').remove();
+}
+
+// Remaining functions from original implementation
+function handleNodeClick(node) {
+    // Add visual feedback for selection
+    $('.node').removeClass('active-node');
+    d3.select(event.currentTarget).classed('active-node', true);
+    
+    // Show node information
+    showNodeInfo(node.data);
+}
+
+function handleNodeActivation(node) {
+    const nodeData = node.data;
+    
+    if (nodeData.action === 'view_vulnerability') {
+        window.location.href = `/vulnerability/${nodeData.owasp_id}`;
+    } else if (nodeData.action === 'start_challenge') {
+        window.location.href = `/challenge/${nodeData.owasp_id}`;
+    }
+}
+
+function showVulnerabilityInfo(owaspId) {
+    // Redirect to vulnerability info page
+    window.location.href = `/vulnerability/${owaspId}`;
+}
+
+function showNodeInfo(nodeData) {
+    // Update info panel or show modal with node details
+    const infoPanel = document.getElementById('node-info');
+    if (infoPanel) {
+        infoPanel.innerHTML = `
+            <h5>${nodeData.name}</h5>
+            ${nodeData.description ? `<p>${nodeData.description}</p>` : ''}
+            ${nodeData.severity ? `<span class="badge bg-${getSeverityBadgeClass(nodeData.severity)}">${nodeData.severity}</span>` : ''}
+        `;
+    }
+}
+
+function getSeverityBadgeClass(severity) {
+    switch (severity) {
+        case 'Critical': return 'danger';
+        case 'High': return 'warning';
+        case 'Medium': return 'info';
+        case 'Low': return 'success';
+        default: return 'secondary';
+    }
+}
+
+function setupTreeSearch() {
+    const searchInput = document.getElementById('tree-search');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            searchTree(searchTerm);
+        });
+    }
+    
+    // Add control buttons
+    setupTreeControls();
+}
+
+function searchTree(searchTerm) {
+    if (!searchTerm) {
+        // Reset all nodes to normal state
+        g.selectAll('.node').style('opacity', 1);
+        g.selectAll('.link').style('opacity', 0.6);
+        return;
+    }
+    
+    // Find matching nodes
+    const matches = nodes.filter(d => 
+        d.data.name.toLowerCase().includes(searchTerm) ||
+        (d.data.description && d.data.description.toLowerCase().includes(searchTerm))
+    );
+    
+    // Highlight matches and dim others
+    g.selectAll('.node').style('opacity', d => {
+        const isMatch = matches.some(match => match.id === d.id);
+        return isMatch ? 1 : 0.3;
+    });
+    
+    g.selectAll('.link').style('opacity', d => {
+        const isMatch = matches.some(match => match.id === d.id || match.id === d.parent?.id);
+        return isMatch ? 0.6 : 0.2;
+    });
+}
+
+function setupTreeControls() {
+    // Add expand/collapse all buttons
+    const controlsContainer = document.getElementById('tree-controls');
+    if (controlsContainer) {
+        controlsContainer.innerHTML = `
+            <div class="btn-group mb-3" role="group">
+                <button type="button" class="btn btn-outline-primary btn-sm" id="expand-all">
+                    <i class="fas fa-expand-arrows-alt"></i> Expand All
+                </button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" id="collapse-all">
+                    <i class="fas fa-compress-arrows-alt"></i> Collapse All
+                </button>
+                <button type="button" class="btn btn-outline-info btn-sm" id="center-tree">
+                    <i class="fas fa-crosshairs"></i> Center
+                </button>
+            </div>
+        `;
+        
+        // Add event listeners
+        document.getElementById('expand-all').addEventListener('click', () => {
+            expandAll(root);
+            update(root);
+        });
+        
+        document.getElementById('collapse-all').addEventListener('click', () => {
+            root.children.forEach(collapse);
+            update(root);
+        });
+        
+        document.getElementById('center-tree').addEventListener('click', centerTree);
+    }
+}
+
+function centerTree() {
+    const bounds = g.node().getBBox();
+    const parent = g.node().parentElement;
+    const fullWidth = parent.clientWidth || parent.parentNode.clientWidth;
+    const fullHeight = parent.clientHeight || parent.parentNode.clientHeight;
+    const width = bounds.width;
+    const height = bounds.height;
+    const midX = bounds.x + width / 2;
+    const midY = bounds.y + height / 2;
+    
+    if (width == 0 || height == 0) return; // nothing to fit
+    
+    const scale = 0.85 / Math.max(width / fullWidth, height / fullHeight);
+    const translate = [fullWidth / 2 - scale * midX, fullHeight / 2 - scale * midY];
+    
+    svg.transition()
+        .duration(750)
+        .call(zoom.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale));
+}
+
+// Export functions for global access
+window.owaspTreeFunctions = {
+    expandAll: () => { expandAll(root); update(root); },
+    collapseAll: () => { root.children.forEach(collapse); update(root); },
+    centerTree: centerTree,
+    searchTree: searchTree
+};
 
 function handleNodeClick(node) {
     // Add visual feedback for selection

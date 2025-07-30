@@ -54,7 +54,17 @@
                         Explore the most critical web application security risks. Click on any category to learn more 
                         or access the corresponding CTF challenge.
                     </p>
-                    <div id="owasp-tree" class="tree-container"></div>
+                    
+                    <!-- Tree Controls -->
+                    <div id="tree-controls" class="mb-3"></div>
+                    
+                    <!-- Search Box -->
+                    <div class="mb-3">
+                        <input type="text" class="form-control" id="tree-search" placeholder="Search vulnerabilities...">
+                    </div>
+                    
+                    <!-- D3.js Tree Container -->
+                    <div id="owasp-tree" class="tree-container" style="min-height: 600px; overflow: hidden;"></div>
                 </div>
             </div>
         </div>
@@ -97,6 +107,21 @@
                                 <p class="mb-0">Submit correct flags to earn points and track your progress</p>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Node Information Panel -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-eye"></i>
+                        Selected Item
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="node-info">
+                        <p class="text-muted">Click on any node in the tree to view detailed information here.</p>
                     </div>
                 </div>
             </div>

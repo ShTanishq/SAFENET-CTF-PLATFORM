@@ -11,8 +11,39 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- jsTree CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css">
+    <!-- D3.js Tree Styles -->
+    <style>
+        .tree-tooltip {
+            pointer-events: none;
+        }
+        .node circle {
+            stroke-width: 2px;
+            transition: all 0.3s ease;
+        }
+        .node circle:hover {
+            stroke-width: 3px;
+            filter: brightness(1.2);
+        }
+        .node text {
+            font: 12px sans-serif;
+            pointer-events: none;
+        }
+        .link {
+            fill: none;
+            stroke: #555;
+            stroke-opacity: 0.6;
+            stroke-width: 2px;
+        }
+        .active-node circle {
+            stroke: #007bff;
+            stroke-width: 3px;
+        }
+        #owasp-tree {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+    </style>
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -102,8 +133,8 @@
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
-    <!-- jsTree JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     
     {% block extra_scripts %}{% endblock %}
 </body>
