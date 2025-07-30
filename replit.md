@@ -7,6 +7,7 @@ This Flask-based web application provides an interactive cybersecurity education
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+UI Design: Creative, soothing design aesthetics that avoid typical cybersecurity themes - use soft colors, friendly aesthetics, smooth animations.
 
 ## System Architecture
 
@@ -34,8 +35,11 @@ Preferred communication style: Simple, everyday language.
 ## Key Components
 
 ### 1. User Management System
-- **User Model**: Stores user credentials, creation timestamps
-- **Authentication**: Password hashing (implied but not fully implemented)
+- **User Model**: Comprehensive user system with Flask-Login integration
+- **Authentication**: Complete login/signup system with password hashing via Werkzeug
+- **Authorization**: Admin role system with admin panel access control
+- **Session Management**: Flask-Login handles user sessions and authentication state
+- **Profile System**: User profiles with progress tracking and statistics
 - **Relationships**: One-to-many with challenge attempts and completions
 
 ### 2. Challenge System
@@ -50,8 +54,16 @@ Preferred communication style: Simple, everyday language.
 
 ### 4. CTF Challenge Engine
 - **Vulnerability Simulation**: Dedicated handlers for each OWASP Top 10 category
-- **Flag Validation**: Server-side flag checking with attempt logging
+- **Flag Validation**: Server-side flag checking with attempt logging (requires authentication)
 - **Hint System**: Progressive hint disclosure for challenge assistance
+- **User Progress**: Challenge completion tracking tied to authenticated users
+
+### 5. Authentication System
+- **Flask-Login Integration**: Complete user session management
+- **Registration/Login**: Beautiful, soothing UI forms with validation
+- **Admin Panel**: Comprehensive administrative interface for user and challenge management
+- **Access Control**: Decorator-based route protection for admin functions
+- **Leaderboard**: User ranking system based on completed challenges and points earned
 
 ## Data Flow
 
@@ -65,9 +77,10 @@ Preferred communication style: Simple, everyday language.
 1. User accesses challenge page via `/challenge/<owasp_id>`
 2. Challenge data loaded from `challenges.json`
 3. Vulnerable endpoint simulated based on OWASP category
-4. User submits flag through challenge interface
-5. Attempt logged to database with IP tracking
+4. User submits flag through challenge interface (authentication required)
+5. Attempt logged to database with user ID and IP tracking
 6. Success/failure response with optional hints
+7. Points awarded and completion recorded for authenticated users
 
 ### 3. Progress Tracking Flow
 1. Challenge completion creates `CompletedChallenge` record
@@ -80,7 +93,11 @@ Preferred communication style: Simple, everyday language.
 ### Python Packages
 - **Flask**: Web framework and routing
 - **Flask-SQLAlchemy**: Database ORM integration
+- **Flask-Login**: User session management and authentication
+- **Flask-WTF**: Form handling and validation
+- **WTForms**: Form building and validation
 - **SQLAlchemy**: Database abstraction layer
+- **Werkzeug**: Password hashing and security utilities
 
 ### Frontend Libraries (CDN)
 - **Bootstrap 5**: CSS framework for responsive design

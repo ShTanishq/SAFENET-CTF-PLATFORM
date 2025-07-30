@@ -1,11 +1,18 @@
 import json
 import os
 from flask import render_template, request, jsonify, session, flash, redirect, url_for
+from flask_login import current_user, login_required
 from app import app, db
-from models import Challenge, ChallengeAttempt, CompletedChallenge
+from models import User, Challenge, ChallengeAttempt, CompletedChallenge
 from challenges import ChallengeManager
+from auth import auth
+from admin import admin
 
 challenge_manager = ChallengeManager()
+
+# Register blueprints
+app.register_blueprint(auth, url_prefix='/auth')
+app.register_blueprint(admin)
 
 @app.route('/')
 def index():
@@ -49,9 +56,9 @@ def challenge_page(owasp_id):
     
     # Check if user has completed this challenge
     completed = False
-    if 'user_id' in session:
+    if current_user.is_authenticated:
         completed_challenge = CompletedChallenge.query.filter_by(
-            user_id=session['user_id'],
+            user_id=current_user.id,
             challenge_id=challenge_data['id']
         ).first()
         completed = completed_challenge is not None
@@ -84,13 +91,14 @@ def submit_flag():
     # Check if flag is correct
     is_correct = submitted_flag == challenge_data['flag']
     
-    # Create a temporary user session if one doesn't exist
-    if 'user_id' not in session:
-        session['user_id'] = 1  # Default anonymous user
+    # Get user ID (require login for flag submission)
+    user_id = current_user.id if current_user.is_authenticated else None
+    if not user_id:
+        return jsonify({'success': False, 'message': 'Please log in to submit flags', 'redirect': '/auth/login'})
     
     # Record attempt
     attempt = ChallengeAttempt()
-    attempt.user_id = session.get('user_id')
+    attempt.user_id = user_id
     attempt.challenge_id = challenge_id
     attempt.submitted_flag = submitted_flag
     attempt.is_correct = is_correct
@@ -99,18 +107,17 @@ def submit_flag():
     
     if is_correct:
         # Check if already completed
-        if session.get('user_id'):
-            existing_completion = CompletedChallenge.query.filter_by(
-                user_id=session['user_id'],
-                challenge_id=challenge_id
-            ).first()
-            
-            if not existing_completion:
-                completion = CompletedChallenge()
-                completion.user_id = session['user_id']
-                completion.challenge_id = challenge_id
-                completion.points_earned = challenge_data['points']
-                db.session.add(completion)
+        existing_completion = CompletedChallenge.query.filter_by(
+            user_id=user_id,
+            challenge_id=challenge_id
+        ).first()
+        
+        if not existing_completion:
+            completion = CompletedChallenge()
+            completion.user_id = user_id
+            completion.challenge_id = challenge_id
+            completion.points_earned = challenge_data['points']
+            db.session.add(completion)
         
         db.session.commit()
         return jsonify({
@@ -138,16 +145,16 @@ def challenge_guide():
 @app.route('/leaderboard')
 def leaderboard():
     """Display user leaderboard"""
-    # Calculate user scores
-    user_scores = db.session.query(
-        CompletedChallenge.user_id,
-        db.func.sum(CompletedChallenge.points_earned).label('total_points'),
+    # Get all users with their scores
+    users_with_scores = db.session.query(
+        User,
+        db.func.coalesce(db.func.sum(CompletedChallenge.points_earned), 0).label('total_points'),
         db.func.count(CompletedChallenge.id).label('challenges_completed')
-    ).group_by(CompletedChallenge.user_id).order_by(
-        db.func.sum(CompletedChallenge.points_earned).desc()
+    ).outerjoin(CompletedChallenge).group_by(User.id).order_by(
+        db.text('total_points DESC')
     ).all()
     
-    return render_template('leaderboard.html', scores=user_scores)
+    return render_template('leaderboard.html', users_with_scores=users_with_scores)
 
 @app.errorhandler(404)
 def not_found(error):

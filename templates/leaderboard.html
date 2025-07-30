@@ -1,181 +1,262 @@
 {% extends "base.html" %}
 
-{% block title %}Leaderboard - OWASP Top 10 2021{% endblock %}
+{% block title %}Leaderboard{% endblock %}
+
+{% block extra_css %}
+<style>
+.leaderboard-container {
+    padding: 2rem 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, 
+        rgba(147, 197, 253, 0.1) 0%, 
+        rgba(196, 181, 253, 0.1) 50%, 
+        rgba(252, 211, 77, 0.1) 100%);
+}
+
+.leaderboard-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.leaderboard-title {
+    font-size: 3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+}
+
+.leaderboard-subtitle {
+    color: #6b7280;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.leaderboard-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.leaderboard-item {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.leaderboard-item:hover {
+    background: rgba(59, 130, 246, 0.05);
+    transform: translateX(10px);
+}
+
+.leaderboard-item:last-child {
+    border-bottom: none;
+}
+
+.rank-badge {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-right: 1.5rem;
+    color: white;
+}
+
+.rank-1 {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    box-shadow: 0 8px 20px rgba(251, 191, 36, 0.3);
+}
+
+.rank-2 {
+    background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+    box-shadow: 0 8px 20px rgba(156, 163, 175, 0.3);
+}
+
+.rank-3 {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    box-shadow: 0 8px 20px rgba(249, 115, 22, 0.3);
+}
+
+.rank-other {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
+}
+
+.user-info {
+    flex: 1;
+}
+
+.user-name {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.2rem;
+}
+
+.user-username {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.user-stats {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #374151;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.points-badge {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.crown-icon {
+    position: absolute;
+    top: -5px;
+    right: 20px;
+    font-size: 2rem;
+    color: #fbbf24;
+    filter: drop-shadow(0 2px 4px rgba(251, 191, 36, 0.3));
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #6b7280;
+}
+
+.empty-state-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.current-user {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+    border: 2px solid rgba(59, 130, 246, 0.2);
+}
+
+.current-user::before {
+    content: '→';
+    position: absolute;
+    left: 0.5rem;
+    font-size: 1.5rem;
+    color: #3b82f6;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .leaderboard-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .user-stats {
+        justify-content: center;
+    }
+    
+    .rank-badge {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+}
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container my-4">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="display-5 mb-4">
-                <i class="fas fa-trophy"></i>
-                Leaderboard
-            </h1>
-            <p class="lead">Top performers in OWASP Top 10 2021 challenges</p>
+<div class="leaderboard-container">
+    <div class="container">
+        <div class="leaderboard-header">
+            <h1 class="leaderboard-title">🏆 Leaderboard</h1>
+            <p class="leaderboard-subtitle">Top performers in cybersecurity challenges</p>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">
-                        <i class="fas fa-medal"></i>
-                        Top Scores
-                    </h5>
-                </div>
-                <div class="card-body">
-                    {% if scores %}
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Rank</th>
-                                        <th>User</th>
-                                        <th>Challenges Completed</th>
-                                        <th>Total Points</th>
-                                        <th>Progress</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for score in scores %}
-                                    <tr>
-                                        <td>
-                                            <span class="badge bg-{{ 'warning' if loop.index == 1 else 'secondary' if loop.index == 2 else 'info' if loop.index == 3 else 'light text-dark' }} fs-6">
-                                                {% if loop.index == 1 %}
-                                                    <i class="fas fa-crown"></i> #{{ loop.index }}
-                                                {% elif loop.index == 2 %}
-                                                    <i class="fas fa-medal"></i> #{{ loop.index }}
-                                                {% elif loop.index == 3 %}
-                                                    <i class="fas fa-award"></i> #{{ loop.index }}
-                                                {% else %}
-                                                    #{{ loop.index }}
-                                                {% endif %}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <strong>User {{ score.user_id or 'Anonymous' }}</strong>
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-success">{{ score.challenges_completed }}/10</span>
-                                        </td>
-                                        <td>
-                                            <strong>{{ score.total_points or 0 }} pts</strong>
-                                        </td>
-                                        <td>
-                                            <div class="progress" style="height: 20px;">
-                                                <div class="progress-bar" role="progressbar" 
-                                                     style="width: {{ ((score.challenges_completed or 0) / 10 * 100)|round }}%">
-                                                    {{ ((score.challenges_completed or 0) / 10 * 100)|round }}%
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+        
+        <div class="leaderboard-card">
+            {% if users_with_scores %}
+                {% for user, total_points, challenges_completed in users_with_scores %}
+                    <div class="leaderboard-item {{ 'current-user' if current_user.is_authenticated and user.id == current_user.id }}">
+                        {% if loop.index <= 3 %}
+                            <div class="crown-icon">👑</div>
+                        {% endif %}
+                        
+                        <div class="rank-badge rank-{{ loop.index if loop.index <= 3 else 'other' }}">
+                            {{ loop.index }}
                         </div>
-                    {% else %}
-                        <div class="text-center py-5">
-                            <i class="fas fa-trophy fa-3x text-muted mb-3"></i>
-                            <h5>No Scores Yet</h5>
-                            <p class="text-muted">Be the first to complete challenges and earn points!</p>
-                            <a href="{{ url_for('index') }}" class="btn btn-primary">
-                                <i class="fas fa-play"></i>
-                                Start Challenges
-                            </a>
+                        
+                        <div class="user-info">
+                            <div class="user-name">{{ user.get_full_name() }}</div>
+                            <div class="user-username">@{{ user.username }}</div>
                         </div>
-                    {% endif %}
+                        
+                        <div class="user-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">{{ challenges_completed }}</div>
+                                <div class="stat-label">Challenges</div>
+                            </div>
+                            
+                            <div class="points-badge">
+                                {{ total_points }} pts
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">🎯</div>
+                    <h3>No challengers yet!</h3>
+                    <p>Be the first to complete a challenge and claim the top spot!</p>
                 </div>
-            </div>
+            {% endif %}
         </div>
-
-        <div class="col-lg-4">
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-info text-white">
-                    <h5 class="mb-0">
-                        <i class="fas fa-chart-bar"></i>
-                        Statistics
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="stat-item mb-3">
-                        <h6>Total Challenges</h6>
-                        <h3 class="text-primary">10</h3>
-                    </div>
-                    <div class="stat-item mb-3">
-                        <h6>Maximum Points</h6>
-                        <h3 class="text-success">1,075</h3>
-                    </div>
-                    <div class="stat-item">
-                        <h6>Active Players</h6>
-                        <h3 class="text-warning">{{ scores|length if scores else 0 }}</h3>
-                    </div>
-                </div>
+        
+        {% if current_user.is_authenticated %}
+            <div class="text-center mt-4">
+                <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
+                    Continue Challenges
+                </a>
             </div>
-
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">
-                        <i class="fas fa-star"></i>
-                        Point Values
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-6">
-                            <h6>A05, A06, A09</h6>
-                            <span class="badge bg-success">75 pts</span>
-                        </div>
-                        <div class="col-6">
-                            <h6>A01, A04, A07</h6>
-                            <span class="badge bg-primary">100 pts</span>
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-6">
-                            <h6>A08</h6>
-                            <span class="badge bg-warning">125 pts</span>
-                        </div>
-                        <div class="col-6">
-                            <h6>A02, A10</h6>
-                            <span class="badge bg-info">150 pts</span>
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-12">
-                            <h6>A03</h6>
-                            <span class="badge bg-danger">200 pts</span>
-                        </div>
-                    </div>
-                </div>
+        {% else %}
+            <div class="text-center mt-4">
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
+                    Join the Challenge
+                </a>
             </div>
-
-            <div class="card shadow-sm">
-                <div class="card-header bg-warning text-dark">
-                    <h5 class="mb-0">
-                        <i class="fas fa-lightbulb"></i>
-                        How to Compete
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <ol class="mb-3">
-                        <li>Complete OWASP Top 10 challenges</li>
-                        <li>Submit correct flags to earn points</li>
-                        <li>Climb the leaderboard ranks</li>
-                    </ol>
-                    <div class="d-grid gap-2">
-                        <a href="{{ url_for('challenge_guide') }}" class="btn btn-outline-primary btn-sm">
-                            <i class="fas fa-graduation-cap"></i>
-                            View Solving Guide
-                        </a>
-                        <a href="{{ url_for('index') }}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-play"></i>
-                            Start Challenges
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
