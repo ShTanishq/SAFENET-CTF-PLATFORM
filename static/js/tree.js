@@ -109,14 +109,20 @@ function initializeD3Tree() {
     
     update(root);
     
-    // Center the tree
-    const rootNode = g.select('.node');
-    if (!rootNode.empty()) {
-        const bbox = rootNode.node().getBBox();
-        const centerX = width / 2 - bbox.x;
-        const centerY = height / 2 - bbox.y;
-        svg.call(zoom.transform, d3.zoomIdentity.translate(centerX, centerY));
-    }
+    // Center the tree after initial render
+    setTimeout(() => {
+        const rootNode = g.select('.node');
+        if (!rootNode.empty()) {
+            try {
+                const bbox = rootNode.node().getBBox();
+                const centerX = width / 2 - bbox.x;
+                const centerY = height / 2 - bbox.y;
+                svg.call(zoom.transform, d3.zoomIdentity.translate(centerX, centerY));
+            } catch (e) {
+                console.log('Tree centering will be available after render');
+            }
+        }
+    }, 100);
 }
 
 function collapse(d) {
@@ -179,7 +185,13 @@ function update(source) {
         .style('fill', d => getNodeColor(d))
         .style('stroke', d => getNodeStrokeColor(d))
         .style('stroke-width', '2px')
-        .style('cursor', 'pointer');
+        .style('cursor', 'pointer')
+        .attr('class', d => {
+            let classes = [];
+            if (d.data.type) classes.push(d.data.type);
+            if (d.children || d._children) classes.push('has-children');
+            return classes.join(' ');
+        });
     
     // Add labels for the nodes
     nodeEnter.append('text')
@@ -277,25 +289,23 @@ function update(source) {
 let i = 0;
 
 function click(event, d) {
+    // Always show node information
+    showNodeInfo(d.data);
+    
+    // Only handle navigation for leaf nodes (nodes without children)
+    if (d.data.action && (!d.children && !d._children)) {
+        // This is a leaf node with an action - don't navigate automatically
+        // Let user click the button in the info panel instead
+        return;
+    }
+    
+    // For nodes with children, toggle expand/collapse
     if (d.children) {
         d._children = d.children;
         d.children = null;
-    } else {
+    } else if (d._children) {
         d.children = d._children;
         d._children = null;
-    }
-    
-    // Handle node actions
-    if (d.data.action) {
-        handleNodeActivation({
-            data: {
-                action: d.data.action,
-                owasp_id: d.data.owasp_id
-            }
-        });
-    } else if (d.data.owasp_id && d.data.type === 'vulnerability') {
-        // Show vulnerability info
-        showVulnerabilityInfo(d.data.owasp_id);
     }
     
     update(d);
@@ -455,14 +465,78 @@ function showVulnerabilityInfo(owaspId) {
 }
 
 function showNodeInfo(nodeData) {
-    // Update info panel or show modal with node details
+    // Update info panel with rich node details
     const infoPanel = document.getElementById('node-info');
     if (infoPanel) {
-        infoPanel.innerHTML = `
-            <h5>${nodeData.name}</h5>
-            ${nodeData.description ? `<p>${nodeData.description}</p>` : ''}
-            ${nodeData.severity ? `<span class="badge bg-${getSeverityBadgeClass(nodeData.severity)}">${nodeData.severity}</span>` : ''}
-        `;
+        let content = '';
+        
+        if (nodeData.type === 'root') {
+            content = `
+                <div class="text-center">
+                    <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                    <h5 class="text-primary">${nodeData.name}</h5>
+                    <p class="text-muted">${nodeData.description}</p>
+                    <div class="row g-2 mt-3">
+                        <div class="col-6">
+                            <div class="bg-light rounded p-2 text-center">
+                                <small class="text-muted">Categories</small>
+                                <h6 class="mb-0">10</h6>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="bg-light rounded p-2 text-center">
+                                <small class="text-muted">Challenges</small>
+                                <h6 class="mb-0">10</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else if (nodeData.type === 'vulnerability') {
+            content = `
+                <div class="mb-3">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="fas fa-bug text-danger me-2"></i>
+                        <h6 class="mb-0">${nodeData.name}</h6>
+                    </div>
+                    ${nodeData.severity ? `<span class="badge bg-${getSeverityBadgeClass(nodeData.severity)} mb-2">${nodeData.severity} Severity</span>` : ''}
+                </div>
+                ${nodeData.description ? `<p class="text-muted small">${nodeData.description}</p>` : ''}
+                <div class="mt-3">
+                    <small class="text-muted">Click to expand and see:</small>
+                    <ul class="small mt-1 mb-0">
+                        <li>Vulnerability information</li>
+                        <li>CTF Challenge</li>
+                    </ul>
+                </div>
+            `;
+        } else if (nodeData.type === 'challenge') {
+            content = `
+                <div class="text-center">
+                    <i class="fas fa-flag text-success fa-2x mb-2"></i>
+                    <h6 class="text-success">${nodeData.name}</h6>
+                    <p class="text-muted small">Interactive CTF Challenge</p>
+                    <button class="btn btn-success btn-sm mt-2" onclick="handleNodeActivation({data: {action: '${nodeData.action}', owasp_id: '${nodeData.owasp_id}'}})">
+                        <i class="fas fa-play me-1"></i>
+                        Start Challenge
+                    </button>
+                </div>
+            `;
+        } else if (nodeData.type === 'info') {
+            content = `
+                <div class="text-center">
+                    <i class="fas fa-info-circle text-info fa-2x mb-2"></i>
+                    <h6 class="text-info">${nodeData.name}</h6>
+                    <p class="text-muted small">Educational Content</p>
+                    <button class="btn btn-info btn-sm mt-2" onclick="handleNodeActivation({data: {action: '${nodeData.action}', owasp_id: '${nodeData.owasp_id}'}})">
+                        <i class="fas fa-book me-1"></i>
+                        Learn More
+                    </button>
+                </div>
+            `;
+        }
+        
+        infoPanel.innerHTML = content;
     }
 }
 
@@ -492,27 +566,52 @@ function setupTreeSearch() {
 function searchTree(searchTerm) {
     if (!searchTerm) {
         // Reset all nodes to normal state
-        g.selectAll('.node').style('opacity', 1);
-        g.selectAll('.link').style('opacity', 0.6);
+        g.selectAll('.node')
+            .classed('search-match search-dimmed', false)
+            .style('opacity', 1);
+        g.selectAll('.link').style('opacity', 0.4);
         return;
     }
     
     // Find matching nodes
     const matches = nodes.filter(d => 
         d.data.name.toLowerCase().includes(searchTerm) ||
-        (d.data.description && d.data.description.toLowerCase().includes(searchTerm))
+        (d.data.description && d.data.description.toLowerCase().includes(searchTerm)) ||
+        (d.data.owasp_id && d.data.owasp_id.toLowerCase().includes(searchTerm))
     );
     
-    // Highlight matches and dim others
-    g.selectAll('.node').style('opacity', d => {
+    // Update node classes for search highlighting
+    g.selectAll('.node').each(function(d) {
+        const node = d3.select(this);
         const isMatch = matches.some(match => match.id === d.id);
-        return isMatch ? 1 : 0.3;
+        
+        node.classed('search-match', isMatch)
+            .classed('search-dimmed', !isMatch)
+            .style('opacity', isMatch ? 1 : 0.3);
     });
     
+    // Update link opacity
     g.selectAll('.link').style('opacity', d => {
         const isMatch = matches.some(match => match.id === d.id || match.id === d.parent?.id);
-        return isMatch ? 0.6 : 0.2;
+        return isMatch ? 0.6 : 0.15;
     });
+    
+    // Auto-expand nodes to show matches
+    matches.forEach(match => {
+        let current = match.parent;
+        while (current) {
+            if (current._children) {
+                current.children = current._children;
+                current._children = null;
+            }
+            current = current.parent;
+        }
+    });
+    
+    // Update the tree to show expanded nodes
+    if (matches.length > 0) {
+        update(root);
+    }
 }
 
 function setupTreeControls() {
