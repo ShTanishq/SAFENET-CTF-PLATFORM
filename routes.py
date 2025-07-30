@@ -70,6 +70,12 @@ def submit_flag():
     if not challenge_id or not submitted_flag:
         return jsonify({'success': False, 'message': 'Missing challenge ID or flag'})
     
+    # Convert challenge_id to integer if it's a string
+    try:
+        challenge_id = int(challenge_id)
+    except (ValueError, TypeError):
+        return jsonify({'success': False, 'message': 'Invalid challenge ID format'})
+    
     # Get challenge
     challenge_data = challenge_manager.get_challenge_by_id(challenge_id)
     if not challenge_data:
@@ -77,6 +83,10 @@ def submit_flag():
     
     # Check if flag is correct
     is_correct = submitted_flag == challenge_data['flag']
+    
+    # Create a temporary user session if one doesn't exist
+    if 'user_id' not in session:
+        session['user_id'] = 1  # Default anonymous user
     
     # Record attempt
     attempt = ChallengeAttempt()
