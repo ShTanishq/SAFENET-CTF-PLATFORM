@@ -1,108 +1,277 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- Modern Header Section -->
-<div class="bg-gradient" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-    <div class="container py-5">
-        <div class="row align-items-center">
+<!-- Cyberpunk Header with Matrix Effect -->
+<div class="cyber-header" style="position: relative; background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #2d1b69 100%); color: #00ff41; overflow: hidden; min-height: 100vh;">
+    <!-- Animated Background -->
+    <div class="matrix-bg" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.1; z-index: 1;"></div>
+    
+    <!-- Floating Particles -->
+    <div class="particles" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2;"></div>
+    
+    <!-- Glitch Text Effect -->
+    <div class="container-fluid h-100 d-flex align-items-center" style="position: relative; z-index: 3;">
+        <div class="row w-100">
+            <div class="col-12 text-center">
+                <div class="cyber-title-container mb-5">
+                    <h1 class="cyber-title" data-text="OWASP TOP 10 2021">
+                        <i class="fas fa-shield-virus me-3" style="color: #ff0080;"></i>
+                        OWASP TOP 10 2021
+                    </h1>
+                    <div class="cyber-subtitle">
+                        <span class="typing-text">Cybersecurity Framework</span>
+                        <span class="cursor">|</span>
+                    </div>
+                </div>
+                
+                <!-- Holographic Stats Display -->
+                <div class="holo-stats row g-4 justify-content-center mb-5">
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="stat-hologram">
+                            <div class="holo-icon">
+                                <i class="fas fa-bug"></i>
+                            </div>
+                            <div class="holo-number" data-target="10">0</div>
+                            <div class="holo-label">VULNERABILITIES</div>
+                            <div class="holo-border"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="stat-hologram">
+                            <div class="holo-icon">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <div class="holo-number" data-target="10">0</div>
+                            <div class="holo-label">CTF CHALLENGES</div>
+                            <div class="holo-border"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="stat-hologram">
+                            <div class="holo-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="holo-number" data-target="1075">0</div>
+                            <div class="holo-label">TOTAL POINTS</div>
+                            <div class="holo-border"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-6">
+                        <div class="stat-hologram">
+                            <div class="holo-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="holo-number" data-target="999">0</div>
+                            <div class="holo-label">HACKERS ONLINE</div>
+                            <div class="holo-border"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Terminal Prompt -->
+                <div class="terminal-prompt">
+                    <span class="prompt-text">root@owaspsec:~# </span>
+                    <span class="command-text">initialize_security_framework</span>
+                    <div class="terminal-cursor"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scroll Indicator -->
+        <div class="scroll-indicator">
+            <div class="scroll-arrow">
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <span>ENTER THE MATRIX</span>
+        </div>
+    </div>
+</div>
+
+<!-- Cyber Framework Interface -->
+<div class="cyber-framework" style="background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%); min-height: 100vh; position: relative;">
+    <!-- Network Grid Background -->
+    <div class="network-grid" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.1; z-index: 1;"></div>
+    
+    <div class="container-fluid py-4" style="position: relative; z-index: 2;">
+        <div class="row g-4">
+            <!-- Main Framework Panel -->
             <div class="col-lg-8">
-                <h1 class="display-4 fw-bold mb-3">
-                    <i class="fas fa-shield-alt me-3"></i>
-                    OWASP Top 10 2021
-                </h1>
-                <p class="lead mb-4">
-                    Interactive cybersecurity education platform featuring hands-on CTF challenges 
-                    based on the most critical web application security risks.
-                </p>
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <div class="d-flex align-items-center">
-                            <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
-                                <i class="fas fa-bug fa-lg"></i>
-                            </div>
-                            <div>
-                                <h4 class="mb-0">10</h4>
-                                <small>Vulnerabilities</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="d-flex align-items-center">
-                            <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
-                                <i class="fas fa-flag fa-lg"></i>
-                            </div>
-                            <div>
-                                <h4 class="mb-0">10</h4>
-                                <small>CTF Challenges</small>
+                <div class="cyber-panel">
+                    <!-- Panel Header with Glitch Effect -->
+                    <div class="panel-header">
+                        <div class="header-content">
+                            <h3 class="panel-title">
+                                <i class="fas fa-network-wired me-2"></i>
+                                SECURITY FRAMEWORK
+                                <span class="status-indicator"></span>
+                            </h3>
+                            <div class="panel-controls">
+                                <button class="cyber-btn primary" onclick="window.owaspTreeFunctions?.expandAll()">
+                                    <i class="fas fa-expand-arrows-alt"></i>
+                                    EXPAND
+                                </button>
+                                <button class="cyber-btn secondary" onclick="window.owaspTreeFunctions?.collapseAll()">
+                                    <i class="fas fa-compress-arrows-alt"></i>
+                                    COLLAPSE
+                                </button>
+                                <button class="cyber-btn accent" onclick="window.owaspTreeFunctions?.centerTree()">
+                                    <i class="fas fa-crosshairs"></i>
+                                    CENTER
+                                </button>
                             </div>
                         </div>
+                        <div class="scan-line"></div>
                     </div>
-                    <div class="col-md-4">
-                        <div class="d-flex align-items-center">
-                            <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
-                                <i class="fas fa-trophy fa-lg"></i>
+                    
+                    <!-- Search Console -->
+                    <div class="search-console">
+                        <div class="console-header">
+                            <span class="console-label">THREAT SCANNER</span>
+                            <div class="console-status">
+                                <span class="status-dot active"></span>
+                                <span>ONLINE</span>
                             </div>
-                            <div>
-                                <h4 class="mb-0">1075</h4>
-                                <small>Total Points</small>
+                        </div>
+                        <div class="search-input-container">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="tree-search" class="cyber-input" 
+                                   placeholder="SCAN FOR VULNERABILITIES, THREATS, OR EXPLOITS...">
+                            <div class="input-glow"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Interactive Framework Tree -->
+                    <div class="framework-container">
+                        <div id="owasp-tree" class="cyber-tree"></div>
+                        <div class="tree-overlay"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cyber Sidebar -->
+            <div class="col-lg-4">
+                <!-- Threat Intel Panel -->
+                <div class="cyber-panel mb-4">
+                    <div class="panel-header">
+                        <div class="header-content">
+                            <h5 class="panel-title">
+                                <i class="fas fa-radar me-2"></i>
+                                THREAT INTEL
+                                <span class="status-indicator"></span>
+                            </h5>
+                        </div>
+                        <div class="scan-line"></div>
+                    </div>
+                    <div class="panel-body p-3">
+                        <div id="node-info" class="threat-display">
+                            <div class="text-center py-4">
+                                <div class="radar-container">
+                                    <div class="radar-sweep"></div>
+                                    <div class="radar-grid"></div>
+                                </div>
+                                <p class="cyber-text mt-3">SELECT TARGET FOR ANALYSIS</p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-4 text-center">
-                <div class="bg-white bg-opacity-10 rounded-3 p-4">
-                    <i class="fas fa-graduation-cap fa-4x mb-3"></i>
-                    <h5>Learn. Practice. Secure.</h5>
-                    <p class="mb-0">Master cybersecurity through practical experience</p>
+
+                <!-- Vulnerability Matrix -->
+                <div class="cyber-panel mb-4">
+                    <div class="panel-header">
+                        <div class="header-content">
+                            <h5 class="panel-title">
+                                <i class="fas fa-shield-virus me-2"></i>
+                                VULNERABILITY MATRIX
+                            </h5>
+                        </div>
+                        <div class="scan-line"></div>
+                    </div>
+                    <div class="panel-body p-3">
+                        <div class="vulnerability-grid">
+                            <div class="vuln-item critical">
+                                <span class="vuln-indicator"></span>
+                                <span class="vuln-label">CRITICAL</span>
+                                <span class="vuln-count">3</span>
+                            </div>
+                            <div class="vuln-item high">
+                                <span class="vuln-indicator"></span>
+                                <span class="vuln-label">HIGH</span>
+                                <span class="vuln-count">4</span>
+                            </div>
+                            <div class="vuln-item medium">
+                                <span class="vuln-indicator"></span>
+                                <span class="vuln-label">MEDIUM</span>
+                                <span class="vuln-count">3</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Status -->
+                <div class="cyber-panel mb-4">
+                    <div class="panel-header">
+                        <div class="header-content">
+                            <h5 class="panel-title">
+                                <i class="fas fa-heartbeat me-2"></i>
+                                SYSTEM STATUS
+                            </h5>
+                        </div>
+                        <div class="scan-line"></div>
+                    </div>
+                    <div class="panel-body p-3">
+                        <div class="status-items">
+                            <div class="status-item">
+                                <span class="status-label">FIREWALL</span>
+                                <span class="status-value online">ONLINE</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">IDS/IPS</span>
+                                <span class="status-value online">ACTIVE</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">ENCRYPTION</span>
+                                <span class="status-value warning">AES-256</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">THREATS</span>
+                                <span class="status-value critical">DETECTED</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mission Control -->
+                <div class="cyber-panel">
+                    <div class="panel-header">
+                        <div class="header-content">
+                            <h5 class="panel-title">
+                                <i class="fas fa-rocket me-2"></i>
+                                MISSION CONTROL
+                            </h5>
+                        </div>
+                        <div class="scan-line"></div>
+                    </div>
+                    <div class="panel-body p-3">
+                        <div class="mission-buttons">
+                            <a href="{{ url_for('challenge_guide') }}" class="cyber-btn primary mb-2 w-100">
+                                <i class="fas fa-book-open me-2"></i>
+                                MISSION BRIEFING
+                            </a>
+                            <a href="{{ url_for('leaderboard') }}" class="cyber-btn accent mb-2 w-100">
+                                <i class="fas fa-trophy me-2"></i>
+                                OPERATOR RANKINGS
+                            </a>
+                            <button class="cyber-btn secondary w-100" onclick="initiateLockdown()">
+                                <i class="fas fa-lock me-2"></i>
+                                SECURE MODE
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<!-- Main Content -->
-<div class="container-fluid py-4" style="background: #f8f9fa;">
-    <div class="row g-4">
-        <!-- Tree Navigation Panel -->
-        <div class="col-lg-8">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-header bg-white border-bottom-0 py-3">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0 text-dark">
-                            <i class="fas fa-sitemap text-primary me-2"></i>
-                            OWASP Top 10 2021 Framework
-                        </h5>
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-outline-secondary btn-sm" onclick="window.owaspTreeFunctions?.expandAll()">
-                                <i class="fas fa-expand-arrows-alt"></i>
-                            </button>
-                            <button class="btn btn-outline-secondary btn-sm" onclick="window.owaspTreeFunctions?.collapseAll()">
-                                <i class="fas fa-compress-arrows-alt"></i>
-                            </button>
-                            <button class="btn btn-outline-primary btn-sm" onclick="window.owaspTreeFunctions?.centerTree()">
-                                <i class="fas fa-crosshairs"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body p-0">
-                    <!-- Search Bar -->
-                    <div class="p-3 border-bottom bg-light">
-                        <div class="input-group">
-                            <span class="input-group-text bg-white border-end-0">
-                                <i class="fas fa-search text-muted"></i>
-                            </span>
-                            <input type="text" class="form-control border-start-0" id="tree-search" 
-                                   placeholder="Search OWASP categories, vulnerabilities, or challenges...">
-                        </div>
-                    </div>
-                    
-                    <!-- Tree Container -->
-                    <div id="owasp-tree" class="tree-container" style="min-height: 700px; background: white;"></div>
-                </div>
-            </div>
-        </div>
         
         <!-- Sidebar Panel -->
         <div class="col-lg-4">
@@ -220,8 +389,149 @@
 {% block extra_scripts %}
 <script src="{{ url_for('static', filename='js/tree.js') }}"></script>
 <script>
-    // Initialize the OWASP tree with data from backend
-    const treeData = {{ tree_data|safe }};
-    initializeOwaspTree(treeData);
+    // Cyberpunk Animation System
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize holographic stats animation
+        animateStats();
+        
+        // Initialize the OWASP tree with data from backend
+        const treeData = {{ tree_data|safe }};
+        initializeOwaspTree(treeData);
+        
+        // Initialize cyber effects
+        initializeCyberEffects();
+    });
+    
+    function animateStats() {
+        const stats = document.querySelectorAll('.holo-number');
+        stats.forEach(stat => {
+            const target = parseInt(stat.getAttribute('data-target'));
+            let current = 0;
+            const increment = target / 100;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                stat.textContent = Math.floor(current);
+                
+                if (current >= target) {
+                    stat.textContent = target;
+                    clearInterval(timer);
+                }
+            }, 20);
+        });
+    }
+    
+    function initializeCyberEffects() {
+        // Matrix rain effect
+        createMatrixRain();
+        
+        // Particle system
+        createParticleSystem();
+        
+        // Glitch text effects
+        initializeGlitchEffects();
+    }
+    
+    function createMatrixRain() {
+        const matrixBg = document.querySelector('.matrix-bg');
+        if (!matrixBg) return;
+        
+        const canvas = document.createElement('canvas');
+        canvas.style.position = 'absolute';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.pointerEvents = 'none';
+        matrixBg.appendChild(canvas);
+        
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const matrix = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%+-/~{[|`]}";
+        const matrixArray = matrix.split("");
+        
+        const fontSize = 10;
+        const columns = canvas.width / fontSize;
+        const drops = [];
+        
+        for(let x = 0; x < columns; x++) {
+            drops[x] = 1;
+        }
+        
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(15, 15, 35, 0.04)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#00ff41';
+            ctx.font = fontSize + 'px monospace';
+            
+            for(let i = 0; i < drops.length; i++) {
+                const text = matrixArray[Math.floor(Math.random() * matrixArray.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        
+        setInterval(drawMatrix, 35);
+    }
+    
+    function createParticleSystem() {
+        const particlesContainer = document.querySelector('.particles');
+        if (!particlesContainer) return;
+        
+        for(let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.style.position = 'absolute';
+            particle.style.width = '2px';
+            particle.style.height = '2px';
+            particle.style.background = '#00ff41';
+            particle.style.borderRadius = '50%';
+            particle.style.animation = `particleFloat ${3 + Math.random() * 4}s linear infinite`;
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            particle.style.opacity = Math.random() * 0.5 + 0.2;
+            particlesContainer.appendChild(particle);
+        }
+        
+        // Add particle animation styles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes particleFloat {
+                0% { transform: translateY(100vh) scale(0); }
+                10% { transform: translateY(90vh) scale(1); }
+                90% { transform: translateY(-10vh) scale(1); }
+                100% { transform: translateY(-20vh) scale(0); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    function initializeGlitchEffects() {
+        const glitchElements = document.querySelectorAll('.cyber-title');
+        glitchElements.forEach(element => {
+            setInterval(() => {
+                if(Math.random() > 0.95) {
+                    element.style.textShadow = `
+                        ${Math.random() * 10 - 5}px 0 #ff0080,
+                        ${Math.random() * 10 - 5}px 0 #00bfff,
+                        0 0 20px #00ff41
+                    `;
+                    setTimeout(() => {
+                        element.style.textShadow = '0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 40px #00ff41';
+                    }, 100);
+                }
+            }, 100);
+        });
+    }
+    
+    function initiateLockdown() {
+        alert('🚨 LOCKDOWN INITIATED 🚨\n\nAll systems secured. Educational mode activated.\nProceed with caution, operator.');
+    }
 </script>
 {% endblock %}

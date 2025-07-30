@@ -111,18 +111,12 @@ function initializeD3Tree() {
     
     // Center the tree after initial render
     setTimeout(() => {
-        const rootNode = g.select('.node');
-        if (!rootNode.empty()) {
-            try {
-                const bbox = rootNode.node().getBBox();
-                const centerX = width / 2 - bbox.x;
-                const centerY = height / 2 - bbox.y;
-                svg.call(zoom.transform, d3.zoomIdentity.translate(centerX, centerY));
-            } catch (e) {
-                console.log('Tree centering will be available after render');
-            }
+        try {
+            centerTree();
+        } catch (e) {
+            console.log('Tree centering will be available after render');
         }
-    }, 100);
+    }, 500);
 }
 
 function collapse(d) {
@@ -465,78 +459,136 @@ function showVulnerabilityInfo(owaspId) {
 }
 
 function showNodeInfo(nodeData) {
-    // Update info panel with rich node details
+    // Update threat intel panel with cyberpunk-themed node analysis
     const infoPanel = document.getElementById('node-info');
     if (infoPanel) {
         let content = '';
         
         if (nodeData.type === 'root') {
             content = `
-                <div class="text-center">
-                    <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
-                    <h5 class="text-primary">${nodeData.name}</h5>
-                    <p class="text-muted">${nodeData.description}</p>
+                <div class="threat-analysis text-center">
+                    <div class="threat-header justify-content-center">
+                        <i class="fas fa-shield-virus threat-icon" style="color: var(--cyber-primary);"></i>
+                        <h5 class="threat-title">SECURITY FRAMEWORK</h5>
+                    </div>
+                    <div class="cyber-text mb-3">MASTER CONTROL SYSTEM</div>
+                    <div class="threat-description">
+                        Central hub for OWASP Top 10 2021 vulnerability assessment and penetration testing framework.
+                    </div>
                     <div class="row g-2 mt-3">
                         <div class="col-6">
-                            <div class="bg-light rounded p-2 text-center">
-                                <small class="text-muted">Categories</small>
-                                <h6 class="mb-0">10</h6>
+                            <div class="vuln-item high">
+                                <span class="vuln-label">THREATS</span>
+                                <span class="vuln-count">10</span>
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="bg-light rounded p-2 text-center">
-                                <small class="text-muted">Challenges</small>
-                                <h6 class="mb-0">10</h6>
+                            <div class="vuln-item critical">
+                                <span class="vuln-label">TARGETS</span>
+                                <span class="vuln-count">10</span>
                             </div>
                         </div>
                     </div>
                 </div>
             `;
         } else if (nodeData.type === 'vulnerability') {
+            const severityClass = getSeverityClass(nodeData.severity);
+            const severityIcon = getSeverityIcon(nodeData.severity);
             content = `
-                <div class="mb-3">
-                    <div class="d-flex align-items-center mb-2">
-                        <i class="fas fa-bug text-danger me-2"></i>
-                        <h6 class="mb-0">${nodeData.name}</h6>
+                <div class="threat-analysis">
+                    <div class="threat-header">
+                        <i class="fas ${severityIcon} threat-icon" style="color: ${getSeverityColor(nodeData.severity)};"></i>
+                        <div>
+                            <h5 class="threat-title">${nodeData.name}</h5>
+                            ${nodeData.severity ? `<span class="threat-severity ${severityClass}">${nodeData.severity} THREAT</span>` : ''}
+                        </div>
                     </div>
-                    ${nodeData.severity ? `<span class="badge bg-${getSeverityBadgeClass(nodeData.severity)} mb-2">${nodeData.severity} Severity</span>` : ''}
-                </div>
-                ${nodeData.description ? `<p class="text-muted small">${nodeData.description}</p>` : ''}
-                <div class="mt-3">
-                    <small class="text-muted">Click to expand and see:</small>
-                    <ul class="small mt-1 mb-0">
-                        <li>Vulnerability information</li>
-                        <li>CTF Challenge</li>
-                    </ul>
+                    <div class="threat-description">
+                        ${nodeData.description || 'Critical security vulnerability requiring immediate assessment and remediation.'}
+                    </div>
+                    <div class="cyber-text small">
+                        >> EXPAND NODE FOR TACTICAL OPTIONS
+                    </div>
+                    <div class="threat-actions mt-3">
+                        <div class="status-item">
+                            <span class="status-label">STATUS</span>
+                            <span class="status-value critical">ACTIVE THREAT</span>
+                        </div>
+                    </div>
                 </div>
             `;
         } else if (nodeData.type === 'challenge') {
             content = `
-                <div class="text-center">
-                    <i class="fas fa-flag text-success fa-2x mb-2"></i>
-                    <h6 class="text-success">${nodeData.name}</h6>
-                    <p class="text-muted small">Interactive CTF Challenge</p>
-                    <button class="btn btn-success btn-sm mt-2" onclick="handleNodeActivation({data: {action: '${nodeData.action}', owasp_id: '${nodeData.owasp_id}'}})">
-                        <i class="fas fa-play me-1"></i>
-                        Start Challenge
-                    </button>
+                <div class="threat-analysis">
+                    <div class="threat-header">
+                        <i class="fas fa-crosshairs threat-icon" style="color: var(--cyber-secondary);"></i>
+                        <div>
+                            <h5 class="threat-title">CTF CHALLENGE</h5>
+                            <span class="threat-severity severity-high">ACTIVE MISSION</span>
+                        </div>
+                    </div>
+                    <div class="threat-description">
+                        Penetration testing simulation: ${nodeData.name}
+                    </div>
+                    <div class="threat-actions">
+                        <button class="cyber-btn secondary" onclick="handleNodeActivation({data: {action: '${nodeData.action}', owasp_id: '${nodeData.owasp_id}'}})">
+                            <i class="fas fa-play me-2"></i>
+                            INITIATE HACK
+                        </button>
+                    </div>
                 </div>
             `;
         } else if (nodeData.type === 'info') {
             content = `
-                <div class="text-center">
-                    <i class="fas fa-info-circle text-info fa-2x mb-2"></i>
-                    <h6 class="text-info">${nodeData.name}</h6>
-                    <p class="text-muted small">Educational Content</p>
-                    <button class="btn btn-info btn-sm mt-2" onclick="handleNodeActivation({data: {action: '${nodeData.action}', owasp_id: '${nodeData.owasp_id}'}})">
-                        <i class="fas fa-book me-1"></i>
-                        Learn More
-                    </button>
+                <div class="threat-analysis">
+                    <div class="threat-header">
+                        <i class="fas fa-database threat-icon" style="color: var(--cyber-accent);"></i>
+                        <div>
+                            <h5 class="threat-title">INTEL BRIEFING</h5>
+                            <span class="threat-severity severity-medium">CLASSIFIED</span>
+                        </div>
+                    </div>
+                    <div class="threat-description">
+                        Security intelligence: ${nodeData.name}
+                    </div>
+                    <div class="threat-actions">
+                        <button class="cyber-btn accent" onclick="handleNodeActivation({data: {action: '${nodeData.action}', owasp_id: '${nodeData.owasp_id}'}})">
+                            <i class="fas fa-eye me-2"></i>
+                            ACCESS INTEL
+                        </button>
+                    </div>
                 </div>
             `;
         }
         
         infoPanel.innerHTML = content;
+    }
+}
+
+function getSeverityClass(severity) {
+    switch(severity?.toLowerCase()) {
+        case 'critical': return 'severity-critical';
+        case 'high': return 'severity-high';
+        case 'medium': return 'severity-medium';
+        default: return 'severity-medium';
+    }
+}
+
+function getSeverityIcon(severity) {
+    switch(severity?.toLowerCase()) {
+        case 'critical': return 'fa-exclamation-triangle';
+        case 'high': return 'fa-radiation';
+        case 'medium': return 'fa-exclamation-circle';
+        default: return 'fa-bug';
+    }
+}
+
+function getSeverityColor(severity) {
+    switch(severity?.toLowerCase()) {
+        case 'critical': return '#dc3545';
+        case 'high': return '#fd7e14';
+        case 'medium': return '#ffc107';
+        default: return 'var(--cyber-accent)';
     }
 }
 
