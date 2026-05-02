@@ -25,6 +25,8 @@ class User(UserMixin, db.Model):
     
     def check_password(self, password):
         """Check password against hash"""
+        if not self.password_hash:
+            return False
         return check_password_hash(self.password_hash, password)
     
     def get_total_points(self):
@@ -80,3 +82,20 @@ class CompletedChallenge(db.Model):
     points_earned = db.Column(db.Integer, default=0)
     
     __table_args__ = (db.UniqueConstraint('user_id', 'challenge_id', name='unique_user_challenge'),)
+
+
+class ChallengeModuleProgress(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    challenge_id = db.Column(db.Integer, db.ForeignKey('challenge.id'), nullable=False)
+    module_index = db.Column(db.Integer, nullable=False)
+    completed_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    __table_args__ = (
+        db.UniqueConstraint(
+            'user_id',
+            'challenge_id',
+            'module_index',
+            name='unique_user_challenge_module'
+        ),
+    )

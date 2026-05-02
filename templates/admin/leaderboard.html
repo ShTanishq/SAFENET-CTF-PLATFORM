@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - Leaderboard{% endblock %}
+
+{% block extra_css %}
+<style>
+.admin-header {
+    background: linear-gradient(135deg, #374151 0%, #111827 100%);
+    color: white;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+}
+
+.admin-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.admin-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
+.admin-nav {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.admin-nav-btn {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.admin-nav-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+    color: white;
+}
+
+.leaderboard-table {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    border-bottom: 2px solid #e5e7eb;
+    font-weight: 600;
+    color: #374151;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.table tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+.rank-badge {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.rank-1 {
+    background: #ffd700;
+    color: #000;
+}
+
+.rank-2 {
+    background: #c0c0c0;
+    color: #000;
+}
+
+.rank-3 {
+    background: #cd7f32;
+    color: #fff;
+}
+
+.rank-other {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.table tbody td {
+    color: #374151;
+}
+
+.table tbody td strong {
+    color: #111827;
+    font-weight: 600;
+}
+
+.table tbody td small {
+    color: #6b7280;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <div class="container">
+        <h1 class="admin-title">🏆 Admin Leaderboard</h1>
+        <p class="admin-subtitle">View all users ranked by their performance</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="admin-nav">
+        <a href="{{ url_for('admin.dashboard') }}" class="admin-nav-btn">📊 Dashboard</a>
+        <a href="{{ url_for('admin.users') }}" class="admin-nav-btn">👥 Users</a>
+        <a href="{{ url_for('admin.challenges') }}" class="admin-nav-btn">🎯 Challenges</a>
+        <a href="{{ url_for('admin.user_progress') }}" class="admin-nav-btn">📈 User Progress</a>
+        <a href="{{ url_for('admin.attempts') }}" class="admin-nav-btn">📝 Attempts</a>
+        <a href="{{ url_for('index') }}" class="admin-nav-btn">🏠 Back to Site</a>
+    </div>
+
+    <div class="leaderboard-table">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>User</th>
+                    <th>Total Points</th>
+                    <th>Challenges Completed</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user, total_points, challenges_completed in users_with_scores %}
+                    <tr>
+                        <td>
+                            {% set rank = loop.index %}
+                            {% if rank == 1 %}
+                                <span class="rank-badge rank-1">🥇</span>
+                            {% elif rank == 2 %}
+                                <span class="rank-badge rank-2">🥈</span>
+                            {% elif rank == 3 %}
+                                <span class="rank-badge rank-3">🥉</span>
+                            {% else %}
+                                <span class="rank-badge rank-other">{{ rank }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <strong>{{ user.get_full_name() }}</strong><br>
+                            <small class="text-muted">@{{ user.username }}</small>
+                        </td>
+                        <td><strong>{{ total_points }}</strong></td>
+                        <td>{{ challenges_completed }}</td>
+                        <td>
+                            <a href="{{ url_for('admin.user_detail', user_id=user.id) }}" class="admin-nav-btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center py-4" style="color: #6b7280;">No users found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+

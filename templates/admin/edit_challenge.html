@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - {{ 'Edit' if challenge else 'New' }} Challenge{% endblock %}
+
+{% block extra_css %}
+<style>
+.admin-header {
+    background: linear-gradient(135deg, #374151 0%, #111827 100%);
+    color: white;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+}
+
+.admin-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.admin-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
+.form-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    padding: 0.75rem;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.btn-submit {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 10px;
+    border: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+}
+
+.btn-cancel {
+    background: #6b7280;
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn-cancel:hover {
+    background: #4b5563;
+    color: white;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <div class="container">
+        <h1 class="admin-title">{{ '✏️ Edit' if challenge else '➕ New' }} Challenge</h1>
+        <p class="admin-subtitle">{{ 'Update challenge details' if challenge else 'Create a new challenge' }}</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="form-card">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            
+            <div class="form-group">
+                {{ form.owasp_category.label(class="form-label") }}
+                {{ form.owasp_category(class="form-select") }}
+                {% if form.owasp_category.errors %}
+                    <div class="text-danger small">{{ form.owasp_category.errors[0] }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.title.label(class="form-label") }}
+                {{ form.title(class="form-control") }}
+                {% if form.title.errors %}
+                    <div class="text-danger small">{{ form.title.errors[0] }}</div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.description.label(class="form-label") }}
+                {{ form.description(class="form-control", rows=8) }}
+                {% if form.description.errors %}
+                    <div class="text-danger small">{{ form.description.errors[0] }}</div>
+                {% endif %}
+                <small class="text-muted">You can use HTML formatting in the description</small>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form.difficulty.label(class="form-label") }}
+                        {{ form.difficulty(class="form-select") }}
+                        {% if form.difficulty.errors %}
+                            <div class="text-danger small">{{ form.difficulty.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        {{ form.points.label(class="form-label") }}
+                        {{ form.points(class="form-control") }}
+                        {% if form.points.errors %}
+                            <div class="text-danger small">{{ form.points.errors[0] }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form.flag.label(class="form-label") }}
+                {{ form.flag(class="form-control") }}
+                {% if form.flag.errors %}
+                    <div class="text-danger small">{{ form.flag.errors[0] }}</div>
+                {% endif %}
+                <small class="text-muted">Format: FLAG{...}</small>
+            </div>
+
+            <div class="form-group">
+                {{ form.hints.label(class="form-label") }}
+                {{ form.hints(class="form-control", rows=5) }}
+                {% if form.hints.errors %}
+                    <div class="text-danger small">{{ form.hints.errors[0] }}</div>
+                {% endif %}
+                <small class="text-muted">Enter hints one per line</small>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                {{ form.submit(class="btn-submit") }}
+                <a href="{{ url_for('admin.challenges') }}" class="btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

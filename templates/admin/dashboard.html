@@ -154,6 +154,7 @@
     <div class="admin-nav">
         <a href="{{ url_for('admin.users') }}" class="admin-nav-btn">👥 Users</a>
         <a href="{{ url_for('admin.challenges') }}" class="admin-nav-btn">🎯 Challenges</a>
+        <a href="{{ url_for('admin.user_progress') }}" class="admin-nav-btn">📈 User Progress</a>
         <a href="{{ url_for('admin.attempts') }}" class="admin-nav-btn">📊 Attempts</a>
         <a href="{{ url_for('admin.admin_leaderboard') }}" class="admin-nav-btn">🏆 Leaderboard</a>
         <a href="{{ url_for('index') }}" class="admin-nav-btn">🏠 Back to Site</a>
@@ -206,7 +207,7 @@
                         </div>
                     {% endfor %}
                 {% else %}
-                    <p class="text-muted">No users yet</p>
+                    <p style="color: #6b7280;">No users yet</p>
                 {% endif %}
             </div>
         </div>
@@ -234,7 +235,7 @@
                         </div>
                     {% endfor %}
                 {% else %}
-                    <p class="text-muted">No attempts yet</p>
+                    <p style="color: #6b7280;">No attempts yet</p>
                 {% endif %}
             </div>
         </div>

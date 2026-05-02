@@ -1,0 +1,270 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - User Details{% endblock %}
+
+{% block extra_css %}
+<style>
+.admin-header {
+    background: linear-gradient(135deg, #374151 0%, #111827 100%);
+    color: white;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+}
+
+.admin-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.admin-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
+.admin-nav {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.admin-nav-btn {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.admin-nav-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+    color: white;
+}
+
+.info-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.info-row {
+    display: flex;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #374151;
+    width: 200px;
+}
+
+.info-value {
+    color: #6b7280;
+    flex: 1;
+}
+
+.badge-admin {
+    background: #ef4444;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.challenge-item {
+    background: #f9fafb;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    border-left: 4px solid #10b981;
+}
+
+.attempt-item {
+    background: #f9fafb;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-correct {
+    background: #10b981;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-incorrect {
+    background: #ef4444;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.info-value {
+    color: #374151;
+}
+
+.challenge-item strong {
+    color: #111827;
+    font-weight: 600;
+}
+
+.attempt-item strong {
+    color: #111827;
+    font-weight: 600;
+}
+
+.attempt-item code {
+    color: #059669;
+    background: #f3f4f6;
+    padding: 0.125rem 0.375rem;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.875rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <div class="container">
+        <h1 class="admin-title">👤 User Details</h1>
+        <p class="admin-subtitle">View detailed information about {{ user.username }}</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="admin-nav">
+        <a href="{{ url_for('admin.dashboard') }}" class="admin-nav-btn">📊 Dashboard</a>
+        <a href="{{ url_for('admin.users') }}" class="admin-nav-btn">👥 Users</a>
+        <a href="{{ url_for('admin.challenges') }}" class="admin-nav-btn">🎯 Challenges</a>
+        <a href="{{ url_for('admin.user_progress') }}" class="admin-nav-btn">📈 User Progress</a>
+        <a href="{{ url_for('admin.attempts') }}" class="admin-nav-btn">📝 Attempts</a>
+        <a href="{{ url_for('index') }}" class="admin-nav-btn">🏠 Back to Site</a>
+    </div>
+
+    <div class="info-card">
+        <h2 class="section-title">User Information</h2>
+        <div class="info-row">
+            <div class="info-label">Username:</div>
+            <div class="info-value">{{ user.username }}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Email:</div>
+            <div class="info-value">{{ user.email }}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Full Name:</div>
+            <div class="info-value">{{ user.get_full_name() }}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Role:</div>
+            <div class="info-value">
+                {% if user.is_admin %}
+                    <span class="badge-admin">Admin</span>
+                {% else %}
+                    <span class="badge bg-secondary">User</span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Status:</div>
+            <div class="info-value">
+                {% if user.active %}
+                    <span class="badge bg-success">Active</span>
+                {% else %}
+                    <span class="badge bg-secondary">Inactive</span>
+                {% endif %}
+            </div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Total Points:</div>
+            <div class="info-value"><strong>{{ user.get_total_points() }}</strong></div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Challenges Completed:</div>
+            <div class="info-value"><strong>{{ user.get_challenges_completed() }}</strong></div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Joined:</div>
+            <div class="info-value">{{ user.created_at.strftime('%B %d, %Y at %I:%M %p') }}</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Last Login:</div>
+            <div class="info-value">{{ user.last_login.strftime('%B %d, %Y at %I:%M %p') if user.last_login else 'Never' }}</div>
+        </div>
+        <div style="margin-top: 1.5rem;">
+            <a href="{{ url_for('admin.edit_user', user_id=user.id) }}" class="admin-nav-btn">
+                <i class="fas fa-edit"></i> Edit User
+            </a>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <h2 class="section-title">Completed Challenges</h2>
+        {% if challenges_completed %}
+            {% for completion in challenges_completed %}
+                <div class="challenge-item">
+                    <strong>{{ completion.challenge.owasp_category }}: {{ completion.challenge.title }}</strong>
+                    <div style="margin-top: 0.5rem; color: #6b7280; font-size: 0.9rem;">
+                        <i class="fas fa-star"></i> {{ completion.points_earned }} points | 
+                        <i class="fas fa-calendar"></i> Completed on {{ completion.completed_at.strftime('%B %d, %Y at %I:%M %p') }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p style="color: #6b7280;">No challenges completed yet.</p>
+        {% endif %}
+    </div>
+
+    <div class="info-card">
+        <h2 class="section-title">Recent Attempts</h2>
+        {% if recent_attempts %}
+            {% for attempt in recent_attempts %}
+                <div class="attempt-item">
+                    <div>
+                        <strong>{{ attempt.challenge.owasp_category }}: {{ attempt.challenge.title }}</strong>
+                        <div style="margin-top: 0.5rem; color: #6b7280; font-size: 0.85rem;">
+                            Flag: <code>{{ attempt.submitted_flag }}</code> | 
+                            {{ attempt.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                        </div>
+                    </div>
+                    <span class="{{ 'status-correct' if attempt.is_correct else 'status-incorrect' }}">
+                        {{ '✓ Correct' if attempt.is_correct else '✗ Incorrect' }}
+                    </span>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p style="color: #6b7280;">No attempts recorded yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

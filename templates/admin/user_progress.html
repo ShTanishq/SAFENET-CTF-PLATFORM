@@ -1,0 +1,356 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - User Progress Tracking{% endblock %}
+
+{% block extra_css %}
+<style>
+.admin-header {
+    background: linear-gradient(135deg, #374151 0%, #111827 100%);
+    color: white;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+}
+
+.admin-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.admin-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
+.admin-nav {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.admin-nav-btn {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.admin-nav-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+    color: white;
+}
+
+.user-progress-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 2rem;
+    transition: transform 0.3s ease;
+}
+
+.user-progress-card:hover {
+    transform: translateY(-5px);
+}
+
+.user-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.user-info {
+    flex: 1;
+}
+
+.user-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.user-meta {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.user-stats {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #3b82f6;
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    color: #6b7280;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.progress-section {
+    margin-top: 1.5rem;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.challenges-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.challenge-item {
+    background: #f3f4f6;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #10b981;
+}
+
+.challenge-item-title {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.challenge-item-meta {
+    font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.recent-attempts {
+    margin-top: 1rem;
+}
+
+.attempt-item {
+    padding: 0.75rem;
+    background: #f9fafb;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.attempt-info {
+    flex: 1;
+}
+
+.attempt-info strong {
+    color: #111827;
+    font-weight: 600;
+}
+
+.attempt-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-correct {
+    background: #10b981;
+    color: white;
+}
+
+.status-incorrect {
+    background: #ef4444;
+    color: white;
+}
+
+.badge-admin {
+    background: #ef4444;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+    background: #f9fafb;
+    border-radius: 8px;
+}
+
+.progress-bar-container {
+    background: #e5e7eb;
+    border-radius: 8px;
+    height: 8px;
+    margin-top: 0.5rem;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+    height: 100%;
+    border-radius: 8px;
+    transition: width 0.3s ease;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <div class="container">
+        <h1 class="admin-title">📈 User Progress Tracking</h1>
+        <p class="admin-subtitle">Monitor all users' learning progress and activity</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="admin-nav">
+        <a href="{{ url_for('admin.dashboard') }}" class="admin-nav-btn">📊 Dashboard</a>
+        <a href="{{ url_for('admin.users') }}" class="admin-nav-btn">👥 Users</a>
+        <a href="{{ url_for('admin.challenges') }}" class="admin-nav-btn">🎯 Challenges</a>
+        <a href="{{ url_for('admin.attempts') }}" class="admin-nav-btn">📝 Attempts</a>
+        <a href="{{ url_for('admin.admin_leaderboard') }}" class="admin-nav-btn">🏆 Leaderboard</a>
+        <a href="{{ url_for('index') }}" class="admin-nav-btn">🏠 Back to Site</a>
+    </div>
+
+    {% if users_progress %}
+        {% for progress in users_progress %}
+            <div class="user-progress-card">
+                <div class="user-header">
+                    <div class="user-info">
+                        <div class="user-name">
+                            {{ progress.user.get_full_name() }}
+                            {% if progress.user.is_admin %}
+                                <span class="badge-admin">Admin</span>
+                            {% endif %}
+                        </div>
+                        <div class="user-meta">
+                            <i class="fas fa-user"></i> @{{ progress.user.username }} | 
+                            <i class="fas fa-envelope"></i> {{ progress.user.email }} | 
+                            <i class="fas fa-calendar"></i> Joined {{ progress.user.created_at.strftime('%B %d, %Y') }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="user-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">{{ progress.total_points }}</div>
+                        <div class="stat-label">Total Points</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">{{ progress.challenges_completed }}</div>
+                        <div class="stat-label">Challenges Completed</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">{{ progress.total_attempts }}</div>
+                        <div class="stat-label">Total Attempts</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">{{ progress.success_rate }}%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                </div>
+
+                <div class="progress-section">
+                    <div class="section-title">
+                        <i class="fas fa-tasks"></i>
+                        Completed Challenges
+                    </div>
+                    {% if progress.completed_challenges %}
+                        <div class="challenges-list">
+                            {% for completion in progress.completed_challenges %}
+                                <div class="challenge-item">
+                                    <div class="challenge-item-title">
+                                        {{ completion.challenge.owasp_category }}: {{ completion.challenge.title }}
+                                    </div>
+                                    <div class="challenge-item-meta">
+                                        <i class="fas fa-star"></i> {{ completion.points_earned }} points | 
+                                        <i class="fas fa-calendar"></i> {{ completion.completed_at.strftime('%Y-%m-%d') }}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <p style="color: #6b7280; margin-top: 0.5rem;">No challenges completed yet</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="progress-section">
+                    <div class="section-title">
+                        <i class="fas fa-history"></i>
+                        Recent Activity
+                    </div>
+                    {% if progress.recent_attempts %}
+                        <div class="recent-attempts">
+                            {% for attempt in progress.recent_attempts %}
+                                <div class="attempt-item">
+                                    <div class="attempt-info">
+                                        <strong>{{ attempt.challenge.owasp_category }}: {{ attempt.challenge.title }}</strong>
+                                        <div style="font-size: 0.85rem; color: #6b7280; margin-top: 0.25rem;">
+                                            {{ attempt.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                                        </div>
+                                    </div>
+                                    <span class="attempt-status {{ 'status-correct' if attempt.is_correct else 'status-incorrect' }}">
+                                        {{ '✓ Correct' if attempt.is_correct else '✗ Incorrect' }}
+                                    </span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <p style="color: #6b7280; margin-top: 0.5rem;">No attempts recorded yet</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div style="margin-top: 1.5rem; text-align: right;">
+                    <a href="{{ url_for('admin.user_detail', user_id=progress.user.id) }}" class="admin-nav-btn">
+                        <i class="fas fa-eye"></i> View Full Details
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="user-progress-card">
+            <div class="empty-state">
+                <i class="fas fa-users fa-3x mb-3" style="color: #9ca3af;"></i>
+                <p style="color: #6b7280; margin-top: 0.5rem;">No users found</p>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+

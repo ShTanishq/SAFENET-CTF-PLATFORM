@@ -59,23 +59,35 @@
 }
 
 .form-floating > .form-control {
-    background: rgba(255, 255, 255, 0.8);
-    border: 2px solid transparent;
+    background: rgba(255, 255, 255, 0.98);
+    border: 1.5px solid rgba(17, 24, 39, 0.25);
     border-radius: 12px;
     height: 60px;
     font-size: 1rem;
-    transition: all 0.3s ease;
+    color: #111827;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+    padding: 1.3rem 1rem 0.5rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.form-floating > .form-control::placeholder {
+    color: transparent;
+    opacity: 0;
 }
 
 .form-floating > .form-control:focus {
-    background: rgba(255, 255, 255, 1);
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background: #ffffff;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+    outline: none;
 }
 
 .form-floating > label {
-    color: #6b7280;
-    font-weight: 500;
+    color: #1f2937;
+    font-weight: 600;
+    padding: 0.95rem 1rem;
+    pointer-events: none;
+    transition: color 0.2s ease;
 }
 
 .btn-auth {
@@ -106,6 +118,11 @@
     border-color: #3b82f6;
 }
 
+.form-check-label {
+    color: #6b7280;
+    font-weight: 500;
+}
+
 .auth-link {
     text-align: center;
     margin-top: 2rem;
@@ -127,6 +144,71 @@
     border-radius: 12px;
     border: none;
     margin-bottom: 1.5rem;
+}
+
+.password-field {
+    position: relative;
+}
+
+.password-field .form-control {
+    padding-right: 3.5rem;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(17, 24, 39, 0.12);
+    border-radius: 999px;
+    color: #1f2937;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.35rem 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.password-toggle:hover {
+    background: rgba(37, 99, 235, 0.12);
+    border-color: rgba(37, 99, 235, 0.3);
+    color: #1d4ed8;
+}
+
+.password-toggle:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.55);
+    outline-offset: 2px;
+}
+
+.password-toggle[aria-pressed="true"] {
+    background: rgba(37, 99, 235, 0.18);
+    border-color: rgba(37, 99, 235, 0.45);
+    color: #1d4ed8;
+}
+
+.password-toggle__icon {
+    font-size: 0.95rem;
+    line-height: 1;
+}
+
+.password-toggle__text {
+    line-height: 1;
+}
+
+@media (max-width: 576px) {
+    .auth-card {
+        padding: 2rem;
+    }
+
+    .form-floating > .form-control {
+        height: 56px;
+        font-size: 0.95rem;
+        padding: 1.1rem 1rem 0.5rem;
+    }
 }
 
 .floating-shapes {
@@ -218,9 +300,20 @@
                 {% endif %}
             </div>
             
-            <div class="form-floating">
-                {{ form.password(class="form-control", placeholder="Password") }}
+            <div class="form-floating password-field">
+                {{ form.password(class="form-control password-input", placeholder="Password", id="login-password", autocomplete="current-password") }}
                 {{ form.password.label }}
+                <button 
+                    type="button" 
+                    class="password-toggle" 
+                    aria-label="Show password"
+                    aria-controls="login-password"
+                    aria-pressed="false"
+                    data-show-label="Show password"
+                    data-hide-label="Hide password">
+                    <span class="password-toggle__icon" aria-hidden="true"><i class="fas fa-eye"></i></span>
+                    <span class="password-toggle__text">Show</span>
+                </button>
                 {% if form.password.errors %}
                     <div class="text-danger small mt-1">
                         {% for error in form.password.errors %}
@@ -243,4 +336,9 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/password-toggle.js') }}" defer></script>
 {% endblock %}

@@ -1,243 +1,621 @@
 {% extends "base.html" %}
 
+{% block title %}OWASP Top 10 2021 - Cybersecurity Learning Platform{% endblock %}
+
 {% block content %}
-<!-- Creative Hero Section -->
-<div class="hero-creative" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%); min-height: 50vh; position: relative; overflow: hidden;">
-    <!-- Animated Background Elements -->
-    <div class="floating-shapes">
-        <div class="shape shape-1"></div>
-        <div class="shape shape-2"></div>
-        <div class="shape shape-3"></div>
-        <div class="shape shape-4"></div>
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h1 class="animate-fade-in-up">
+                    Master Cybersecurity with
+                    <span class="text-gradient">OWASP Top 10</span>
+                </h1>
+                <p class="lead animate-fade-in-up">
+                    Learn real-world web application security through hands-on CTF challenges. 
+                    Practice ethical hacking techniques in a safe, educational environment.
+                </p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap animate-fade-in-up">
+                    <a href="{{ url_for('auth.login', next=url_for('challenge_guide')) }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-play me-2"></i>Start Learning
+                    </a>
+                    <a href="#challenges" class="btn btn-outline btn-lg">
+                        <i class="fas fa-eye me-2"></i>View Challenges
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-    
-    <div class="container py-5 position-relative" style="z-index: 2;">
-        <div class="row align-items-center min-vh-50">
-            <div class="col-lg-8">
-                <div class="hero-content">
-                    <h1 class="display-3 fw-light mb-4" style="color: #2d3748; font-family: 'Inter', sans-serif;">
-                        <span class="fw-bold">OWASP</span> Top 10
-                        <br>
-                        <span style="background: linear-gradient(45deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Learning Hub</span>
-                    </h1>
-                    <p class="lead mb-5" style="color: #4a5568; font-size: 1.25rem; line-height: 1.6;">
-                        Discover web security through interactive exploration and hands-on challenges. 
-                        A gentle introduction to cybersecurity concepts.
-                    </p>
-                    <div class="stats-grid row g-4">
-                        <div class="col-md-4">
-                            <div class="stat-card-creative">
-                                <div class="stat-icon">
-                                    <i class="fas fa-lightbulb"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <h3>10</h3>
-                                    <p>Security Topics</p>
-                                </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stat-card animate-fade-in-up">
+                    <div class="stat-icon">
+                        <i class="fas fa-bug"></i>
+                    </div>
+                    <div class="stat-number">10</div>
+                    <div class="stat-label">Vulnerability Types</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stat-card animate-fade-in-up">
+                    <div class="stat-icon">
+                        <i class="fas fa-flag"></i>
+                    </div>
+                    <div class="stat-number">{{ total_challenges|default('25') }}</div>
+                    <div class="stat-label">CTF Challenges</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stat-card animate-fade-in-up">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-number">{{ total_users|default('150') }}</div>
+                    <div class="stat-label">Active Learners</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="stat-card animate-fade-in-up">
+                    <div class="stat-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-number">{{ total_completions|default('500') }}</div>
+                    <div class="stat-label">Challenges Completed</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- OWASP Challenges Carousel -->
+<section id="challenges" class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class="card hover-lift">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-sliders-h me-2 text-primary"></i>
+                            OWASP Top 10 Challenges
+                        </h5>
+                        <p class="text-muted mb-0 mt-2">Browse all challenges in a carousel view - Login required to access</p>
+                    </div>
+                    <div class="card-body">
+                        <div id="owasp-carousel" class="carousel slide" data-bs-ride="false" data-bs-interval="false" data-bs-wrap="true" data-bs-keyboard="true">
+                            <div class="carousel-inner" id="carousel-inner">
+                                <!-- Carousel items will be dynamically generated -->
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="stat-card-creative">
-                                <div class="stat-icon">
-                                    <i class="fas fa-puzzle-piece"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <h3>10</h3>
-                                    <p>Interactive Challenges</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="stat-card-creative">
-                                <div class="stat-icon">
-                                    <i class="fas fa-star"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <h3>1075</h3>
-                                    <p>Achievement Points</p>
-                                </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#owasp-carousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#owasp-carousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                            <div class="carousel-indicators" id="carousel-indicators">
+                                <!-- Indicators will be dynamically generated -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content with Tree -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- OWASP Knowledge Tree -->
+            <div class="col-lg-8 mb-4">
+                <div class="card hover-lift">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-sitemap me-2 text-primary"></i>
+                            OWASP Top 10 Knowledge Tree
+                        </h5>
+                        <p class="text-muted mb-0 mt-2">Interactive visualization of web application vulnerabilities</p>
+                    </div>
+                    <div class="card-body">
+                        <!-- Search Input -->
+                        <div class="mb-4 position-relative">
+                            <div class="input-group search-panel">
+                                <span class="input-group-text bg-transparent border-end-0">
+                                    <i class="fas fa-search text-muted"></i>
+                                </span>
+                                <input type="text"
+                                       id="search-input"
+                                       class="form-control border-start-0 search-panel__input" 
+                                       placeholder="Search vulnerabilities, challenges, or concepts..."
+                                       aria-label="Search OWASP vulnerabilities">
+                                <button type="button"
+                                        class="search-panel__clear"
+                                        id="search-clear"
+                                        aria-label="Clear search">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div id="search-results" class="search-results d-none" role="listbox" aria-label="Search results"></div>
+                        </div>
+                        <!-- Tree Controls -->
+                        <div class="d-flex gap-2 mb-3">
+                            <button type="button" class="btn btn-outline btn-sm" onclick="expandAllNodes()">
+                                <i class="fas fa-plus-circle me-1"></i> Expand All
+                            </button>
+                            <button type="button" class="btn btn-outline btn-sm" onclick="collapseAllNodes()">
+                                <i class="fas fa-minus-circle me-1"></i> Collapse All
+                            </button>
+                            <button type="button" class="btn btn-outline btn-sm" onclick="centerTree()">
+                                <i class="fas fa-compress-arrows-alt me-1"></i> Center
+                            </button>
+                        </div>
+                        
+                        <!-- Tree Container -->
+                        <div id="owasp-tree">
+                            <div class="text-center p-5">
+                                <div class="loading mb-3"></div>
+                                <h5 class="text-primary">Loading OWASP Knowledge Tree</h5>
+                                <p class="text-muted">Please wait while we prepare the interactive visualization...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
             <div class="col-lg-4">
-                <div class="hero-illustration">
-                    <div class="illustration-card">
-                        <i class="fas fa-tree fa-4x mb-3" style="color: #48bb78;"></i>
-                        <h4 style="color: #2d3748;">Explore & Learn</h4>
-                        <p style="color: #718096;">Navigate through knowledge with our interactive tree interface</p>
+                {% if is_authenticated %}
+                <!-- Learning Journey -->
+                <div class="card hover-lift mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-route me-2 text-primary"></i>
+                            Your Learning Journey
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                 style="width: 32px; height: 32px;">
+                                <span class="text-dark fw-bold">1</span>
+                            </div>
+                            <div>
+                                <strong>Start with A01</strong>
+                                <br><small>Broken Access Control</small>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-success rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                 style="width: 32px; height: 32px;">
+                                <span class="text-dark fw-bold">2</span>
+                            </div>
+                            <div>
+                                <strong>Practice A02</strong>
+                                <br><small>Cryptographic Failures</small>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-warning rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                 style="width: 32px; height: 32px;">
+                                <span class="text-dark fw-bold">3</span>
+                            </div>
+                            <div>
+                                <strong>Master A03</strong>
+                                <br><small>Injection Attacks</small>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <div class="bg-info rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                 style="width: 32px; height: 32px;">
+                                <span class="text-dark fw-bold">4</span>
+                            </div>
+                            <div>
+                                <strong>Advanced Topics</strong>
+                                <br><small>Continue with A04-A10</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
+                {% else %}
+                <!-- Login Prompt -->
+                <div class="card hover-lift mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-lock me-2 text-warning"></i>
+                            Login Required
+                        </h6>
+                    </div>
+                    <div class="card-body text-center">
+                        <p class="text-muted mb-3">
+                            To access challenges and track your progress, please log in or create an account.
+                        </p>
+                        <div class="d-grid gap-2">
+                            <a href="{{ url_for('auth.login') }}" class="btn btn-primary">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </a>
+                            <a href="{{ url_for('auth.register') }}" class="btn btn-outline">
+                                <i class="fas fa-user-plus me-2"></i>Register
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
 
-<!-- Main Content -->
-<div class="main-content" style="background: linear-gradient(180deg, #f7fafc 0%, #edf2f7 100%); min-height: 100vh;">
-    <div class="container-fluid py-5">
-        <div class="row g-4">
-            <!-- Tree Navigation Panel -->
-            <div class="col-lg-8">
-                <div class="tree-panel">
-                    <div class="panel-header">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="panel-title">
-                                <i class="fas fa-seedling me-2" style="color: #48bb78;"></i>
-                                <span>Knowledge Tree</span>
-                            </div>
-                            <div class="panel-controls">
-                                <button class="control-btn" onclick="window.owaspTreeFunctions?.expandAll()" title="Expand All">
-                                    <i class="fas fa-expand-arrows-alt"></i>
-                                </button>
-                                <button class="control-btn" onclick="window.owaspTreeFunctions?.collapseAll()" title="Collapse All">
-                                    <i class="fas fa-compress-arrows-alt"></i>
-                                </button>
-                                <button class="control-btn" onclick="window.owaspTreeFunctions?.centerTree()" title="Center View">
-                                    <i class="fas fa-crosshairs"></i>
-                                </button>
-                            </div>
-                        </div>
+                <!-- Risk Levels -->
+                <div class="card hover-lift mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-exclamation-triangle me-2 text-warning"></i>
+                            Risk Levels
+                        </h6>
                     </div>
-                    
-                    <!-- Search Bar -->
-                    <div class="search-section">
-                        <div class="search-container">
-                            <i class="fas fa-search search-icon"></i>
-                            <input type="text" class="search-input" id="tree-search" 
-                                   placeholder="Discover topics, challenges, and learning paths...">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-danger me-3">Critical</span>
+                            <small>Immediate action required</small>
                         </div>
-                    </div>
-                    
-                    <!-- Tree Container -->
-                    <div id="owasp-tree" class="tree-canvas"></div>
-                </div>
-            </div>
-        
-        <!-- Sidebar Panel -->
-        <div class="col-lg-4">
-            <!-- Selected Item Panel -->
-            <div class="info-panel mb-4">
-                <div class="panel-header-creative">
-                    <i class="fas fa-eye me-2"></i>
-                    <span>Current Focus</span>
-                </div>
-                <div class="panel-content">
-                    <div id="node-info">
-                        <div class="welcome-state">
-                            <i class="fas fa-hand-point-up fa-2x mb-3" style="color: #fbb6ce;"></i>
-                            <p>Click any item in the knowledge tree to explore detailed information</p>
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-warning me-3">High</span>
+                            <small>Address within 30 days</small>
+                        </div>
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge bg-info me-3">Medium</span>
+                            <small>Address within 90 days</small>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <span class="badge bg-success me-3">Low</span>
+                            <small>Address when possible</small>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Journey Guide -->
-            <div class="journey-panel mb-4">
-                <div class="panel-header-creative">
-                    <i class="fas fa-map me-2"></i>
-                    <span>Learning Journey</span>
-                </div>
-                <div class="panel-content">
-                    <div class="journey-steps">
-                        <div class="journey-step">
-                            <div class="step-number">1</div>
-                            <div class="step-content">
-                                <h6>Discover</h6>
-                                <p>Explore the knowledge tree and find interesting topics</p>
-                            </div>
-                        </div>
-                        <div class="journey-step">
-                            <div class="step-number">2</div>
-                            <div class="step-content">
-                                <h6>Learn</h6>
-                                <p>Read about security concepts in easy-to-understand format</p>
-                            </div>
-                        </div>
-                        <div class="journey-step">
-                            <div class="step-number">3</div>
-                            <div class="step-content">
-                                <h6>Practice</h6>
-                                <p>Try hands-on challenges in a safe environment</p>
-                            </div>
-                        </div>
-                        <div class="journey-step">
-                            <div class="step-number">4</div>
-                            <div class="step-content">
-                                <h6>Achieve</h6>
-                                <p>Collect points and track your learning progress</p>
-                            </div>
-                        </div>
+                <!-- Important Reminder -->
+                <div class="card hover-lift">
+                    <div class="card-header">
+                        <h6 class="mb-0">
+                            <i class="fas fa-shield-alt me-2 text-success"></i>
+                            Important Reminder
+                        </h6>
                     </div>
-                </div>
-            </div>
-
-            <!-- Difficulty Guide -->
-            <div class="difficulty-panel mb-4">
-                <div class="panel-header-creative">
-                    <i class="fas fa-chart-line me-2"></i>
-                    <span>Difficulty Levels</span>
-                </div>
-                <div class="panel-content">
-                    <div class="difficulty-items">
-                        <div class="difficulty-item">
-                            <div class="difficulty-dot" style="background: linear-gradient(45deg, #ff6b6b, #ff8e8e);"></div>
-                            <span>Critical</span>
-                            <span class="difficulty-label">Very Important</span>
-                        </div>
-                        <div class="difficulty-item">
-                            <div class="difficulty-dot" style="background: linear-gradient(45deg, #ffa726, #ffb74d);"></div>
-                            <span>High</span>
-                            <span class="difficulty-label">Important</span>
-                        </div>
-                        <div class="difficulty-item">
-                            <div class="difficulty-dot" style="background: linear-gradient(45deg, #ffee58, #fff176);"></div>
-                            <span>Medium</span>
-                            <span class="difficulty-label">Moderate</span>
-                        </div>
-                        <div class="difficulty-item">
-                            <div class="difficulty-dot" style="background: linear-gradient(45deg, #66bb6a, #81c784);"></div>
-                            <span>Low</span>
-                            <span class="difficulty-label">Good to Know</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Friendly Reminder -->
-            <div class="reminder-panel">
-                <div class="panel-header-creative">
-                    <i class="fas fa-heart me-2"></i>
-                    <span>Friendly Reminder</span>
-                </div>
-                <div class="panel-content">
-                    <div class="reminder-items">
-                        <div class="reminder-item">
-                            <i class="fas fa-graduation-cap" style="color: #9f7aea;"></i>
-                            <p><strong>Learning Environment</strong><br>All content is designed for educational purposes</p>
-                        </div>
-                        <div class="reminder-item">
-                            <i class="fas fa-handshake" style="color: #4fd1c7;"></i>
-                            <p><strong>Ethical Practice</strong><br>Always follow responsible security guidelines</p>
-                        </div>
-                        <div class="reminder-item">
-                            <i class="fas fa-shield-alt" style="color: #68d391;"></i>
-                            <p><strong>Safe Learning</strong><br>Only practice on systems you own or have permission to test</p>
+                    <div class="card-body">
+                        <p class="mb-3">
+                            <strong>This platform is for educational purposes only.</strong>
+                        </p>
+                        <p class="mb-0">
+                            Practice ethical hacking responsibly. Only test systems you own or have explicit permission to test.
+                        </p>
+                        <div class="mt-3">
+                            <a href="https://owasp.org/www-project-top-ten/" target="_blank" class="btn btn-outline btn-sm">
+                                <i class="fas fa-external-link-alt me-2"></i>Official OWASP Guide
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+
+<!-- Call to Action -->
+<section class="py-5" style="background: var(--darker-bg);">
+    <div class="container text-center">
+        <h2 class="mb-4">Ready to Start Your Cybersecurity Journey?</h2>
+        <p class="lead mb-4">Join thousands of developers learning to build secure applications</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-user-plus me-2"></i>Get Started Free
+            </a>
+            <a href="{{ url_for('auth.login', next=url_for('challenge_guide')) }}" class="btn btn-outline btn-lg">
+                <i class="fas fa-book me-2"></i>Read the Guide
+            </a>
+        </div>
+    </div>
+</section>
 {% endblock %}
 
 {% block extra_scripts %}
-<script src="{{ url_for('static', filename='js/tree.js') }}"></script>
 <script>
-    // Initialize the OWASP tree with data from backend
+    // Initialize tree data and authentication status
     const treeData = {{ tree_data|safe }};
-    initializeOwaspTree(treeData);
+    const isAuthenticated = {{ is_authenticated|tojson }};
+    const searchIndex = {{ search_index|safe }};
+    window.OwaspSearchIndex = searchIndex;
+    window.isUserAuthenticated = isAuthenticated;
+    
+    // Global tree functions for button onclick handlers
+    function expandAllNodes() {
+        if (window.OwaspTree && window.OwaspTree.expandAll) {
+            window.OwaspTree.expandAll();
+        } else {
+            console.log('Tree not yet initialized');
+        }
+    }
+    
+    function collapseAllNodes() {
+        if (window.OwaspTree && window.OwaspTree.collapseAll) {
+            window.OwaspTree.collapseAll();
+        } else {
+            console.log('Tree not yet initialized');
+        }
+    }
+    
+    function centerTree() {
+        if (window.OwaspTree && window.OwaspTree.centerTree) {
+            window.OwaspTree.centerTree();
+        } else {
+            console.log('Tree not yet initialized');
+        }
+    }
+    
+    // Handle node clicks with authentication check
+    function handleNodeClick(nodeData) {
+        if (!isAuthenticated) {
+            // Show login prompt for non-authenticated users
+            showLoginPrompt();
+            return;
+        }
+        
+        // Handle authenticated user actions
+        if (nodeData.action === 'view_vulnerability') {
+            window.location.href = `/vulnerability/${nodeData.owasp_id}`;
+        } else if (nodeData.action === 'start_challenge') {
+            window.location.href = `/challenge/${nodeData.owasp_id}`;
+        }
+    }
+    
+    function showLoginPrompt() {
+        // Create a modal or alert to prompt login
+        alert('Please log in to access challenges and detailed information.');
+    }
+    
+    // Initialize OWASP Challenges Carousel
+    function initializeCarousel() {
+        const carouselInner = document.getElementById('carousel-inner');
+        const carouselIndicators = document.getElementById('carousel-indicators');
+        
+        if (!carouselInner || !treeData) return;
+        
+        // Parse tree data if it's a string
+        const parsedTreeData = typeof treeData === 'string' ? JSON.parse(treeData) : treeData;
+        
+        // Filter to get only vulnerability nodes (A01-A10)
+        const vulnerabilities = parsedTreeData.filter(item => item.id && item.id.startsWith('A0'));
+        
+        // Clear existing content
+        carouselInner.innerHTML = '';
+        carouselIndicators.innerHTML = '';
+        
+        vulnerabilities.forEach((vuln, index) => {
+            // Create carousel item
+            const isActive = index === 0 ? 'active' : '';
+            const carouselItem = document.createElement('div');
+            carouselItem.className = `carousel-item ${isActive}`;
+            
+            // Get challenge data from search index
+            const challengeData = window.OwaspSearchIndex?.find(item => item.id === vuln.id) || {};
+            const challengeTitle = challengeData.challengeTitle || 'CTF Challenge';
+            const description = challengeData.description || vuln.data?.description || 'Learn about this OWASP Top 10 vulnerability through hands-on challenges.';
+            
+            // Escape HTML to prevent XSS
+            const escapeHtml = (text) => {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            };
+            
+            carouselItem.innerHTML = `
+                <div class="row g-0 align-items-stretch" style="pointer-events: none; min-height: 400px;">
+                    <div class="col-md-6">
+                        <div class="p-4 h-100 d-flex flex-column">
+                            <div class="flex-grow-1 d-flex flex-column justify-content-center">
+                                <h3 class="text-primary mb-3" style="color: #3b82f6 !important; font-size: 1.75rem; font-weight: 600;">
+                                    <i class="fas fa-shield-alt me-2"></i>${escapeHtml(vuln.text)}
+                                </h3>
+                                <p class="lead mb-3" style="color: #374151; line-height: 1.6; font-size: 1.1rem;">
+                                    ${escapeHtml(description)}
+                                </p>
+                                <div class="mb-4">
+                                    <span class="badge bg-${vuln.data?.severity === 'Critical' ? 'danger' : vuln.data?.severity === 'High' ? 'warning' : 'info'} me-2" style="font-size: 0.9rem; padding: 0.5rem 0.75rem;">
+                                        ${escapeHtml(vuln.data?.severity || 'Medium')}
+                                    </span>
+                                    <span class="badge bg-secondary" style="font-size: 0.9rem; padding: 0.5rem 0.75rem;">${escapeHtml(vuln.id)}</span>
+                                </div>
+                            </div>
+                            <div class="mt-auto" style="pointer-events: auto;">
+                                <div class="d-flex gap-2 flex-nowrap align-items-center mb-2">
+                                    <a href="${isAuthenticated ? `/vulnerability/${vuln.id}` : '/auth/login'}" 
+                                       class="btn btn-primary carousel-btn-link flex-fill"
+                                       style="pointer-events: auto; z-index: 1000; position: relative; padding: 0.75rem 1.25rem; font-weight: 500; white-space: nowrap;"
+                                       data-no-slide="true">
+                                        <i class="fas fa-book me-2"></i>Learn More
+                                    </a>
+                                    <a href="${isAuthenticated ? `/challenge/${vuln.id}` : '/auth/login'}" 
+                                       class="btn btn-outline-primary carousel-btn-link flex-fill"
+                                       style="pointer-events: auto; z-index: 1000; position: relative; padding: 0.75rem 1.25rem; font-weight: 500; white-space: nowrap;"
+                                       data-no-slide="true"
+                                       ${!isAuthenticated ? 'onclick="event.preventDefault(); alert(\'Please log in to access challenges.\'); window.location.href=\'/auth/login\'; return false;"' : ''}>
+                                        <i class="fas fa-flag me-2"></i>Start Challenge
+                                    </a>
+                                </div>
+                                ${!isAuthenticated ? '<p class="text-warning mb-0 text-center" style="pointer-events: auto; font-size: 0.85rem;"><i class="fas fa-lock me-1"></i><strong>Login required</strong> to access challenges</p>' : ''}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-4 h-100 d-flex flex-column justify-content-center align-items-center text-center" style="background: rgba(59, 130, 246, 0.05); border-left: 1px solid rgba(59, 130, 246, 0.1);">
+                            <div class="bg-primary bg-opacity-10 rounded-circle p-4 mb-3 d-inline-flex align-items-center justify-content-center" style="width: 120px; height: 120px;">
+                                <i class="fas fa-bug fa-4x text-primary"></i>
+                            </div>
+                            <h5 style="color: #111827; font-weight: 600; font-size: 1.25rem; margin-bottom: 0.5rem;">${escapeHtml(challengeTitle)}</h5>
+                            <p class="text-muted mb-0" style="color: #6b7280; font-size: 0.95rem;">Interactive hands-on learning experience</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            carouselInner.appendChild(carouselItem);
+            
+            // Create indicator
+            const indicator = document.createElement('button');
+            indicator.type = 'button';
+            indicator.setAttribute('data-bs-target', '#owasp-carousel');
+            indicator.setAttribute('data-bs-slide-to', index.toString());
+            indicator.className = isActive;
+            indicator.setAttribute('aria-label', `Slide ${index + 1}`);
+            if (index === 0) {
+                indicator.setAttribute('aria-current', 'true');
+            }
+            carouselIndicators.appendChild(indicator);
+        });
+    }
+    
+    // Initialize carousel when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            initializeCarousel();
+            
+                    // After carousel is initialized, set up event handlers
+            setTimeout(function() {
+                const carousel = document.getElementById('owasp-carousel');
+                if (carousel && typeof bootstrap !== 'undefined') {
+                    // Get Bootstrap carousel instance
+                    const bsCarousel = bootstrap.Carousel.getInstance(carousel) || new bootstrap.Carousel(carousel);
+                    
+                    // Disable all pointer events on carousel inner, then re-enable only for buttons
+                    const carouselInner = carousel.querySelector('.carousel-inner');
+                    if (carouselInner) {
+                        carouselInner.style.pointerEvents = 'none';
+                        
+                        // Re-enable for all interactive elements
+                        setTimeout(function() {
+                            const allLinks = carouselInner.querySelectorAll('a, button');
+                            allLinks.forEach(function(link) {
+                                if (!link.closest('.carousel-control-prev') && 
+                                    !link.closest('.carousel-control-next') &&
+                                    !link.closest('.carousel-indicators')) {
+                                    link.style.pointerEvents = 'auto';
+                                    link.style.position = 'relative';
+                                    link.style.zIndex = '10000';
+                                }
+                            });
+                        }, 50);
+                    }
+                    
+                    // Intercept all clicks on the carousel - use capture phase
+                    carousel.addEventListener('click', function(e) {
+                        const target = e.target;
+                        const link = target.closest('a[data-no-slide], .carousel-btn-link, a.btn, button.btn');
+                        
+                        // If clicking on a button/link (but not carousel controls), stop everything
+                        if (link && !link.closest('.carousel-control-prev') && 
+                            !link.closest('.carousel-control-next') &&
+                            !link.closest('.carousel-indicators')) {
+                            e.stopPropagation();
+                            e.stopImmediatePropagation();
+                            // Allow default action (navigation) to proceed
+                            return true;
+                        }
+                    }, true); // Capture phase - fires before Bootstrap handlers
+                    
+                    // Also prevent slide event if triggered by button
+                    carousel.addEventListener('slide.bs.carousel', function(e) {
+                        const activeElement = document.activeElement;
+                        const clickedElement = e.relatedTarget || activeElement;
+                        
+                        if (clickedElement && (
+                            clickedElement.hasAttribute('data-no-slide') ||
+                            clickedElement.closest('[data-no-slide]') ||
+                            clickedElement.closest('.carousel-btn-link')
+                        )) {
+                            e.preventDefault();
+                            e.stopImmediatePropagation();
+                            return false;
+                        }
+                    });
+                }
+            }, 200);
+        }, 500);
+    });
 </script>
+
+<style>
+.carousel-item {
+    min-height: 450px;
+    padding: 1.5rem 0;
+}
+
+.carousel-item .row {
+    min-height: 400px;
+    margin: 0;
+}
+
+.carousel-item .col-md-6 {
+    display: flex;
+    flex-direction: column;
+}
+
+.carousel-item .col-md-6:first-child {
+    padding-right: 1rem;
+}
+
+.carousel-item .col-md-6:last-child {
+    padding-left: 1rem;
+}
+
+/* Ensure buttons are properly aligned */
+.carousel-item .btn {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.carousel-item .d-flex.gap-2 {
+    width: 100%;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: rgba(59, 130, 246, 0.8);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+
+.carousel-indicators button {
+    background-color: #3b82f6;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0 5px;
+}
+
+.carousel-indicators button.active {
+    background-color: #2563eb;
+}
+
+/* Ensure buttons in carousel are clickable and don't trigger carousel slide */
+#owasp-carousel .carousel-btn-link {
+    position: relative;
+    z-index: 1000;
+    pointer-events: auto !important;
+    cursor: pointer;
+}
+
+/* Ensure carousel controls still work */
+#owasp-carousel .carousel-control-prev,
+#owasp-carousel .carousel-control-next,
+#owasp-carousel .carousel-indicators button {
+    pointer-events: auto;
+    z-index: 20;
+    position: relative;
+}
+</style>
 {% endblock %}
+

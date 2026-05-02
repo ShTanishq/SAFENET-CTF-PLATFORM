@@ -4,6 +4,7 @@ from functools import wraps
 from app import db
 from models import User, Challenge, ChallengeAttempt, CompletedChallenge
 from forms import AdminChallengeForm, AdminUserForm
+from challenges import ChallengeManager
 import json
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
@@ -96,8 +97,41 @@ def edit_user(user_id):
 @admin.route('/challenges')
 @admin_required
 def challenges():
-    challenges = Challenge.query.order_by(Challenge.owasp_category, Challenge.created_at).all()
-    return render_template('admin/challenges.html', challenges=challenges)
+    """Display all challenges with answers - admin only"""
+    challenge_manager = ChallengeManager()
+    
+    # Get challenges from database
+    db_challenges = Challenge.query.order_by(Challenge.owasp_category, Challenge.created_at).all()
+    
+    # Get challenges from JSON file (for challenges that might not be in DB yet)
+    json_challenges = []
+    for owasp_id in ['A01', 'A02', 'A03', 'A04', 'A05', 'A06', 'A07', 'A08', 'A09', 'A10']:
+        json_challenge = challenge_manager.get_challenge(owasp_id)
+        if json_challenge:
+            # Check if this challenge exists in DB
+            db_challenge = Challenge.query.filter_by(owasp_category=owasp_id).first()
+            if not db_challenge:
+                # Create a temporary challenge object from JSON for display
+                class TempChallenge:
+                    def __init__(self, data):
+                        self.id = data.get('id')
+                        self.owasp_category = data.get('owasp_category')
+                        self.title = data.get('title')
+                        self.description = data.get('description', '')
+                        self.difficulty = data.get('difficulty', 'Medium')
+                        self.flag = data.get('flag', 'N/A')
+                        self.hints = '\n'.join(data.get('hints', []))
+                        self.points = data.get('points', 100)
+                        self.created_at = None
+                        self.attempts = []
+                        self.completions = []
+                
+                json_challenges.append(TempChallenge(json_challenge))
+    
+    # Combine both lists
+    all_challenges = list(db_challenges) + json_challenges
+    
+    return render_template('admin/challenges.html', challenges=all_challenges)
 
 @admin.route('/challenges/new', methods=['GET', 'POST'])
 @admin_required
@@ -179,3 +213,46 @@ def admin_leaderboard():
     ).all()
     
     return render_template('admin/leaderboard.html', users_with_scores=users_with_scores)
+
+@admin.route('/user-progress')
+@admin_required
+def user_progress():
+    """Track all users and their progress"""
+    # Get all users with their progress details
+    users_progress = []
+    
+    all_users = User.query.order_by(User.created_at.desc()).all()
+    
+    for user in all_users:
+        # Get completed challenges
+        completed_challenges = CompletedChallenge.query.filter_by(user_id=user.id).all()
+        
+        # Get all attempts
+        all_attempts = ChallengeAttempt.query.filter_by(user_id=user.id).order_by(
+            ChallengeAttempt.created_at.desc()
+        ).all()
+        
+        # Calculate statistics
+        total_points = user.get_total_points()
+        challenges_completed = user.get_challenges_completed()
+        total_attempts = len(all_attempts)
+        success_rate = round((challenges_completed / total_attempts * 100) if total_attempts > 0 else 0, 2)
+        
+        # Get recent activity
+        recent_attempts = all_attempts[:5] if len(all_attempts) > 5 else all_attempts
+        
+        users_progress.append({
+            'user': user,
+            'total_points': total_points,
+            'challenges_completed': challenges_completed,
+            'total_attempts': total_attempts,
+            'success_rate': success_rate,
+            'completed_challenges': completed_challenges,
+            'recent_attempts': recent_attempts,
+            'last_activity': all_attempts[0].created_at if all_attempts else user.created_at
+        })
+    
+    # Sort by total points descending
+    users_progress.sort(key=lambda x: x['total_points'], reverse=True)
+    
+    return render_template('admin/user_progress.html', users_progress=users_progress)

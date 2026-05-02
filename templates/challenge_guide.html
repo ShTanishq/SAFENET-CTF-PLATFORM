@@ -6,251 +6,223 @@
 <div class="container my-4">
     <div class="row">
         <div class="col-12">
-            <h1 class="display-5 mb-4">
-                <i class="fas fa-graduation-cap"></i>
+            <h1 class="display-5 mb-4 text-gradient">
+                <i class="fas fa-graduation-cap me-2"></i>
                 How to Solve CTF Challenges
             </h1>
-            <p class="lead">Complete guide to finding flags in each OWASP Top 10 vulnerability challenge</p>
+            <p class="lead">Progressive guidance designed to teach thinking steps without revealing flags.</p>
         </div>
     </div>
 
     <div class="row">
         <div class="col-lg-8">
             <!-- A01: Broken Access Control -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-danger text-white">
-                    <h5 class="mb-0">🔓 A01: Broken Access Control - Direct Object Reference</h5>
+            <div class="card shadow-sm mb-4 hover-lift">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-unlock me-2 text-danger"></i>
+                        A01: Broken Access Control - Direct Object Reference
+                    </h5>
                 </div>
                 <div class="card-body">
                     <h6>Challenge Overview:</h6>
                     <p>Exploit a user profile system that doesn't properly check authorization.</p>
                     
-                    <h6>How to Solve:</h6>
+                    <h6>Progressive Hints:</h6>
                     <ol>
-                        <li>Navigate to the A01 challenge page</li>
-                        <li>Use the User Profile Access Simulator</li>
-                        <li>Change the User ID from 1 to 2</li>
-                        <li>Click "Test Access" to access another user's profile</li>
-                        <li>The flag will be revealed in the admin user's secret field</li>
+                        <li>Check how the API identifies which profile to return.</li>
+                        <li>Try manipulating the user_id parameter.</li>
+                        <li>What happens if you request a different user’s ID?</li>
                     </ol>
-                    
-                    <div class="alert alert-info">
-                        <strong>Flag:</strong> <code>FLAG{br0k3n_4cc3ss_c0ntr0l_2021}</code>
-                    </div>
                 </div>
             </div>
 
             <!-- A02: Cryptographic Failures -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-warning text-dark">
-                    <h5 class="mb-0">🔐 A02: Cryptographic Failures - Weak Encryption</h5>
+            <div class="card shadow-sm mb-4 hover-lift">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-key me-2 text-warning"></i>
+                        A02: Cryptographic Failures - Weak Encryption
+                    </h5>
                 </div>
                 <div class="card-body">
                     <h6>Challenge Overview:</h6>
                     <p>Analyze and break a weak ROT13 encryption algorithm.</p>
                     
-                    <h6>How to Solve:</h6>
+                    <h6>Progressive Hints:</h6>
                     <ol>
-                        <li>Go to the A02 challenge page</li>
-                        <li>In the encryption tool, enter the word "secret"</li>
-                        <li>Click "Encrypt Data" to see the ROT13 encrypted result</li>
-                        <li>The system will return the encrypted flag in ROT13 format</li>
-                        <li>Decrypt the ROT13 text to get the real flag</li>
+                        <li>Recognize the pattern of the cipher used.</li>
+                        <li>Is the cipher symmetric to itself?</li>
+                        <li>How could you reverse the transformation?</li>
                     </ol>
-                    
-                    <div class="alert alert-info">
-                        <strong>Encrypted Flag:</strong> <code>SYNT{pelcgb_snvyher_jrnx_rapelcgvba}</code><br>
-                        <strong>Decrypted Flag:</strong> <code>FLAG{crypto_failure_weak_encryption}</code>
-                    </div>
                 </div>
             </div>
 
             <!-- A03: Injection -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-danger text-white">
-                    <h5 class="mb-0">💉 A03: Injection - SQL Injection</h5>
+            <div class="card shadow-sm mb-4 hover-lift">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-syringe me-2 text-danger"></i>
+                        A03: Injection - SQL Injection
+                    </h5>
                 </div>
                 <div class="card-body">
                     <h6>Challenge Overview:</h6>
                     <p>Exploit a SQL injection vulnerability in the user search system.</p>
                     
-                    <h6>How to Solve:</h6>
+                    <h6>Progressive Hints:</h6>
                     <ol>
-                        <li>Access the A03 challenge page</li>
-                        <li>In the username field, enter: <code>' OR '1'='1' UNION SELECT * FROM users--</code></li>
-                        <li>Click "Search User" to execute the SQL injection</li>
-                        <li>The system will return all users including the flag_user</li>
-                        <li>Look for the flag in the flag_user's password field</li>
+                        <li>Where is the user input inserted in the SQL query?</li>
+                        <li>Can you close the string and append a logical condition?</li>
+                        <li>Could UNION help you extract additional rows?</li>
                     </ol>
-                    
-                    <div class="alert alert-info">
-                        <strong>Flag:</strong> <code>FLAG{sql_1nj3ct10n_pwn3d}</code>
-                    </div>
                 </div>
             </div>
 
             <!-- A04: Insecure Design -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-warning text-dark">
-                    <h5 class="mb-0">📐 A04: Insecure Design - Password Reset Flaw</h5>
+            <div class="card shadow-sm mb-4 hover-lift">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-drafting-compass me-2 text-warning"></i>
+                        A04: Insecure Design - Password Reset Flaw
+                    </h5>
                 </div>
                 <div class="card-body">
                     <h6>Challenge Overview:</h6>
                     <p>Exploit a password reset system with no verification.</p>
                     
-                    <h6>How to Solve:</h6>
+                    <h6>Progressive Hints:</h6>
                     <ol>
-                        <li>Navigate to the A04 challenge page</li>
-                        <li>Enter email: <code>admin@company.com</code></li>
-                        <li>Enter any new password (e.g., "newpass123")</li>
-                        <li>Click "Reset Password"</li>
-                        <li>The system will reset the admin password and reveal the flag</li>
+                        <li>Which verification step is missing?</li>
+                        <li>What if the app doesn’t require a token?</li>
+                        <li>Try targeting a high-value account in a safe way.</li>
                     </ol>
-                    
-                    <div class="alert alert-info">
-                        <strong>Flag:</strong> <code>FLAG{1ns3cur3_d3s1gn_n0_v3r1f1c4t10n}</code>
-                    </div>
                 </div>
             </div>
 
             <!-- A05: Security Misconfiguration -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-info text-white">
-                    <h5 class="mb-0">⚙️ A05: Security Misconfiguration - Debug Mode</h5>
+            <div class="card shadow-sm mb-4 hover-lift">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cog me-2 text-info"></i>
+                        A05: Security Misconfiguration - Debug Mode
+                    </h5>
                 </div>
                 <div class="card-body">
                     <h6>Challenge Overview:</h6>
                     <p>Enable debug mode to expose sensitive configuration information.</p>
                     
-                    <h6>How to Solve:</h6>
+                    <h6>Progressive Hints:</h6>
                     <ol>
-                        <li>Go to the A05 challenge page</li>
-                        <li>Check the "Enable Debug Mode" checkbox</li>
-                        <li>Click "Check Configuration"</li>
-                        <li>Debug information will be exposed including the flag</li>
+                        <li>How do apps usually toggle debug behavior?</li>
+                        <li>What sensitive data often appears in debug output?</li>
+                        <li>Why is debug mode dangerous in production?</li>
                     </ol>
-                    
-                    <div class="alert alert-info">
-                        <strong>Flag:</strong> <code>FLAG{s3cur1ty_m1sc0nf1g_d3bug_3xp0s3d}</code>
-                    </div>
                 </div>
             </div>
 
             <!-- A06: Vulnerable Components -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-secondary text-white">
-                    <h5 class="mb-0">📦 A06: Vulnerable Components - Outdated Libraries</h5>
+            <div class="card shadow-sm mb-4 hover-lift">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cube me-2 text-secondary"></i>
+                        A06: Vulnerable Components - Outdated Libraries
+                    </h5>
                 </div>
                 <div class="card-body">
                     <h6>Challenge Overview:</h6>
                     <p>Identify outdated components with known vulnerabilities.</p>
                     
-                    <h6>How to Solve:</h6>
+                    <h6>Progressive Hints:</h6>
                     <ol>
-                        <li>Access the A06 challenge page</li>
-                        <li>Select "jQuery" from the component dropdown</li>
-                        <li>Click "Check Version"</li>
-                        <li>The system will show vulnerability information and the flag</li>
+                        <li>Which popular libraries are known for historical CVEs?</li>
+                        <li>Compare current vs latest versions.</li>
+                        <li>Map CVEs to outdated versions.</li>
                     </ol>
-                    
-                    <div class="alert alert-info">
-                        <strong>Flag:</strong> <code>FLAG{vuln3r4bl3_c0mp0n3nts_0utd4t3d}</code>
-                    </div>
                 </div>
             </div>
 
             <!-- A07: Authentication Failures -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-danger text-white">
-                    <h5 class="mb-0">🔑 A07: Authentication Failures - Weak Passwords</h5>
+            <div class="card shadow-sm mb-4 hover-lift">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user-lock me-2 text-danger"></i>
+                        A07: Authentication Failures - Weak Passwords
+                    </h5>
                 </div>
                 <div class="card-body">
                     <h6>Challenge Overview:</h6>
                     <p>Exploit weak password policies to gain admin access.</p>
                     
-                    <h6>How to Solve:</h6>
+                    <h6>Progressive Hints:</h6>
                     <ol>
-                        <li>Navigate to the A07 challenge page</li>
-                        <li>Enter username: <code>admin</code></li>
-                        <li>Try common weak passwords like: <code>password</code>, <code>123456</code>, <code>admin</code></li>
-                        <li>Click "Login" to attempt authentication</li>
-                        <li>Success with a weak password will reveal the flag</li>
+                        <li>List the top 10 most common passwords.</li>
+                        <li>Try the admin username.</li>
+                        <li>What protections should prevent this?</li>
                     </ol>
-                    
-                    <div class="alert alert-info">
-                        <strong>Flag:</strong> <code>FLAG{4uth3nt1c4t10n_f41lur3_w34k_p4ss}</code>
-                    </div>
                 </div>
             </div>
 
             <!-- A08: Data Integrity Failures -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-warning text-dark">
-                    <h5 class="mb-0">📊 A08: Data Integrity Failures - Unsafe Processing</h5>
+            <div class="card shadow-sm mb-4 hover-lift">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-database me-2 text-warning"></i>
+                        A08: Data Integrity Failures - Unsafe Processing
+                    </h5>
                 </div>
                 <div class="card-body">
                     <h6>Challenge Overview:</h6>
                     <p>Exploit unsafe data processing to trigger integrity failures.</p>
                     
-                    <h6>How to Solve:</h6>
+                    <h6>Progressive Hints:</h6>
                     <ol>
-                        <li>Go to the A08 challenge page</li>
-                        <li>In the data payload field, enter text containing both "payload" and "flag"</li>
-                        <li>Example: <code>This is a malicious payload containing flag data</code></li>
-                        <li>Click "Process Data"</li>
-                        <li>The unsafe processing will trigger and reveal the flag</li>
+                        <li>What triggers special code paths in deserialization?</li>
+                        <li>Which keywords might the server look for?</li>
+                        <li>Why is accepting untrusted objects dangerous?</li>
                     </ol>
-                    
-                    <div class="alert alert-info">
-                        <strong>Flag:</strong> <code>FLAG{d4t4_1nt3gr1ty_f41lur3_d3s3r14l}</code>
-                    </div>
                 </div>
             </div>
 
             <!-- A09: Logging Failures -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-info text-white">
-                    <h5 class="mb-0">📝 A09: Logging Failures - Audit Trail Bypass</h5>
+            <div class="card shadow-sm mb-4 hover-lift">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-file-alt me-2 text-info"></i>
+                        A09: Logging Failures - Audit Trail Bypass
+                    </h5>
                 </div>
                 <div class="card-body">
                     <h6>Challenge Overview:</h6>
                     <p>Perform sensitive operations that aren't properly logged.</p>
                     
-                    <h6>How to Solve:</h6>
+                    <h6>Progressive Hints:</h6>
                     <ol>
-                        <li>Access the A09 challenge page</li>
-                        <li>Select "sensitive_operation" from the action dropdown</li>
-                        <li>Click "Execute Action"</li>
-                        <li>The operation will complete without proper logging and reveal the flag</li>
+                        <li>Which actions are “sensitive” in typical systems?</li>
+                        <li>Should these actions generate audit logs?</li>
+                        <li>What happens if logging is missing?</li>
                     </ol>
-                    
-                    <div class="alert alert-info">
-                        <strong>Flag:</strong> <code>FLAG{l0gg1ng_f41lur3_n0_4ud1t_tr41l}</code>
-                    </div>
                 </div>
             </div>
 
             <!-- A10: SSRF -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-secondary text-white">
-                    <h5 class="mb-0">🌐 A10: Server-Side Request Forgery - Internal Access</h5>
+            <div class="card shadow-sm mb-4 hover-lift">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-external-link-alt me-2 text-secondary"></i>
+                        A10: Server-Side Request Forgery - Internal Access
+                    </h5>
                 </div>
                 <div class="card-body">
                     <h6>Challenge Overview:</h6>
                     <p>Exploit SSRF to access internal resources.</p>
                     
-                    <h6>How to Solve:</h6>
+                    <h6>Progressive Hints:</h6>
                     <ol>
-                        <li>Navigate to the A10 challenge page</li>
-                        <li>Enter an internal URL like: <code>http://localhost</code> or <code>http://127.0.0.1</code></li>
-                        <li>You can also try: <code>http://internal-server</code></li>
-                        <li>Click "Fetch URL"</li>
-                        <li>The SSRF will access internal resources and expose the flag</li>
+                        <li>How can internal addresses be reached indirectly?</li>
+                        <li>What safety checks should the server perform on URLs?</li>
+                        <li>Which network ranges are commonly internal?</li>
                     </ol>
-                    
-                    <div class="alert alert-info">
-                        <strong>Flag:</strong> <code>FLAG{ssrf_1nt3rn4l_4cc3ss_pwn3d}</code>
-                    </div>
                 </div>
             </div>
         </div>
